@@ -1,0 +1,77 @@
+2025-08-21 14:11:42,578 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 14:11:42,578 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:11:42.578208
+2025-08-21 14:11:42,578 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 14:11:42,578 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:11:42,578 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 14:11:42,578 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 14:11:42,578 - multi_source_coffee_scraper - INFO - Starting multi-source coffee price scraping...
+2025-08-21 14:11:42,578 - multi_source_coffee_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:11:42,578 - multi_source_coffee_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:11:42,914 - multi_source_coffee_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:11:42,915 - multi_source_coffee_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:11:43,127 - multi_source_coffee_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:11:43,128 - multi_source_coffee_scraper - WARNING - Failed to get content from CafeF Vietnam
+2025-08-21 14:11:43,128 - multi_source_coffee_scraper - INFO - Trying source: Vietstock
+2025-08-21 14:11:43,128 - multi_source_coffee_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:11:43,348 - multi_source_coffee_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:11:43,349 - multi_source_coffee_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:11:43,465 - multi_source_coffee_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:11:43,465 - multi_source_coffee_scraper - WARNING - Failed to get content from Vietstock
+2025-08-21 14:11:43,465 - multi_source_coffee_scraper - INFO - Trying source: ThoiTietNongNghiep
+2025-08-21 14:11:43,465 - multi_source_coffee_scraper - INFO - Fetching https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm (attempt 1/2)
+2025-08-21 14:11:43,472 - multi_source_coffee_scraper - WARNING - Failed to fetch https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm: HTTPSConnectionPool(host='www.thoitietnonghoavang.vn', port=443): Max retries exceeded with url: /gia-ca-phe-hom-nay.htm (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x104e5fa90>: Failed to resolve 'www.thoitietnonghoavang.vn' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-08-21 14:11:43,472 - multi_source_coffee_scraper - INFO - Fetching https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm (attempt 2/2)
+2025-08-21 14:11:43,475 - multi_source_coffee_scraper - WARNING - Failed to fetch https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm: HTTPSConnectionPool(host='www.thoitietnonghoavang.vn', port=443): Max retries exceeded with url: /gia-ca-phe-hom-nay.htm (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x104e50c70>: Failed to resolve 'www.thoitietnonghoavang.vn' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-08-21 14:11:43,476 - multi_source_coffee_scraper - WARNING - Failed to get content from ThoiTietNongNghiep
+2025-08-21 14:11:43,476 - multi_source_coffee_scraper - INFO - Trying source: WebGia Fallback
+2025-08-21 14:11:43,476 - multi_source_coffee_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:11:43,683 - multi_source_coffee_scraper - INFO - Successfully fetched https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/
+2025-08-21 14:11:43,741 - multi_source_coffee_scraper - INFO - ✅ Got 2 results from WebGia Fallback
+2025-08-21 14:11:43,741 - multi_source_coffee_scraper - INFO - Got both major international markets, stopping here
+2025-08-21 14:11:43,741 - multi_source_coffee_scraper - INFO - Multi-source scraping completed: 2 markets from 1 sources
+2025-08-21 14:11:43,741 - telegram_bot - INFO - Sending Telegram report...
+2025-08-21 14:11:44,933 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 14:11:44,934 - telegram_bot - INFO - ✅ Daily report completed successfully
+2025-08-21 14:11:44,934 - __main__ - INFO - ✅ Coffee price update completed successfully
+2025-08-21 14:11:52,914 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: test
+2025-08-21 14:11:52,914 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:11:52.914136
+2025-08-21 14:11:52,914 - __main__ - INFO - 🧪 Starting system test...
+2025-08-21 14:11:52,914 - __main__ - INFO - Testing scraper...
+2025-08-21 14:11:52,914 - multi_source_coffee_scraper - INFO - Starting multi-source coffee price scraping...
+2025-08-21 14:11:52,914 - multi_source_coffee_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:11:52,914 - multi_source_coffee_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:11:53,565 - multi_source_coffee_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:11:53,566 - multi_source_coffee_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:11:53,771 - multi_source_coffee_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:11:53,771 - multi_source_coffee_scraper - WARNING - Failed to get content from CafeF Vietnam
+2025-08-21 14:11:53,771 - multi_source_coffee_scraper - INFO - Trying source: Vietstock
+2025-08-21 14:11:53,771 - multi_source_coffee_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:11:53,967 - multi_source_coffee_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:11:53,968 - multi_source_coffee_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:11:54,061 - multi_source_coffee_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:11:54,061 - multi_source_coffee_scraper - WARNING - Failed to get content from Vietstock
+2025-08-21 14:11:54,061 - multi_source_coffee_scraper - INFO - Trying source: ThoiTietNongNghiep
+2025-08-21 14:11:54,061 - multi_source_coffee_scraper - INFO - Fetching https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm (attempt 1/2)
+2025-08-21 14:11:54,067 - multi_source_coffee_scraper - WARNING - Failed to fetch https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm: HTTPSConnectionPool(host='www.thoitietnonghoavang.vn', port=443): Max retries exceeded with url: /gia-ca-phe-hom-nay.htm (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x1083f5190>: Failed to resolve 'www.thoitietnonghoavang.vn' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-08-21 14:11:54,067 - multi_source_coffee_scraper - INFO - Fetching https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm (attempt 2/2)
+2025-08-21 14:11:54,070 - multi_source_coffee_scraper - WARNING - Failed to fetch https://www.thoitietnonghoavang.vn/gia-ca-phe-hom-nay.htm: HTTPSConnectionPool(host='www.thoitietnonghoavang.vn', port=443): Max retries exceeded with url: /gia-ca-phe-hom-nay.htm (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x1083f5460>: Failed to resolve 'www.thoitietnonghoavang.vn' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-08-21 14:11:54,070 - multi_source_coffee_scraper - WARNING - Failed to get content from ThoiTietNongNghiep
+2025-08-21 14:11:54,071 - multi_source_coffee_scraper - INFO - Trying source: WebGia Fallback
+2025-08-21 14:11:54,071 - multi_source_coffee_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:11:54,275 - multi_source_coffee_scraper - INFO - Successfully fetched https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/
+2025-08-21 14:11:54,336 - multi_source_coffee_scraper - INFO - ✅ Got 2 results from WebGia Fallback
+2025-08-21 14:11:54,336 - multi_source_coffee_scraper - INFO - Got both major international markets, stopping here
+2025-08-21 14:11:54,336 - multi_source_coffee_scraper - INFO - Multi-source scraping completed: 2 markets from 1 sources
+2025-08-21 14:11:54,336 - __main__ - INFO - ✅ Scraping test passed: 2 markets scraped
+2025-08-21 14:11:54,336 - __main__ - INFO - Testing Telegram bot...
+2025-08-21 14:11:54,336 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:11:54,336 - telegram_bot - INFO - Running system test...
+2025-08-21 14:11:55,310 - telegram_bot - INFO - Bot connection test successful: @baogiathitruongbot
+2025-08-21 14:11:56,360 - telegram_bot - INFO - Target chat: private
+2025-08-21 14:11:56,361 - investing_coffee_scraper - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-21 14:11:57,001 - investing_coffee_scraper - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee
+2025-08-21 14:11:57,020 - investing_coffee_scraper - ERROR - Could not find price for robusta
+2025-08-21 14:11:57,020 - telegram_bot - WARNING - Scraper test returned no data
+2025-08-21 14:11:58,122 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 14:11:58,122 - telegram_bot - INFO - ✅ System test completed successfully
+2025-08-21 14:11:58,128 - __main__ - INFO - ✅ System test completed successfully

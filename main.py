@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
 
 from config import Config
-from investing_coffee_scraper import InvestingCoffeeScraper
+from multi_source_coffee_scraper import MultiSourceCoffeeScraper
 from telegram_bot import CoffeePriceNotifier
 
 # Configure logging
@@ -71,14 +71,14 @@ async def run_system_test():
         
         # Test scraper
         logger.info("Testing scraper...")
-        scraper = InvestingCoffeeScraper()
+        scraper = MultiSourceCoffeeScraper()
         
-        # Test single coffee scraping
-        robusta_data = scraper.scrape_single_coffee('robusta')
-        if robusta_data and 'current_price' in robusta_data:
-            logger.info(f"✅ Robusta scraping test passed: ${robusta_data['current_price']}")
+        # Test scraping
+        test_data = scraper.scrape_all_prices()
+        if test_data and test_data.get('success_count', 0) > 0:
+            logger.info(f"✅ Scraping test passed: {test_data['success_count']} markets scraped")
         else:
-            logger.warning("⚠️ Robusta scraping test failed")
+            logger.warning("⚠️ Scraping test failed")
         
         # Test Telegram bot
         logger.info("Testing Telegram bot...")

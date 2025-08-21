@@ -72,9 +72,9 @@ class TelegramBot:
         Send formatted coffee price report
         """
         try:
-            from investing_coffee_scraper import InvestingCoffeeScraper
+            from multi_source_coffee_scraper import MultiSourceCoffeeScraper
             
-            scraper = InvestingCoffeeScraper()
+            scraper = MultiSourceCoffeeScraper()
             message = scraper.format_telegram_message(price_data)
             
             return await self.send_message(message)
@@ -189,10 +189,10 @@ class CoffeePriceNotifier:
         
         try:
             # Import here to avoid circular imports
-            from investing_coffee_scraper import InvestingCoffeeScraper
+            from multi_source_coffee_scraper import MultiSourceCoffeeScraper
             
             # Initialize scraper
-            scraper = InvestingCoffeeScraper()
+            scraper = MultiSourceCoffeeScraper()
             
             # Scrape price data
             logger.info("Scraping coffee prices...")

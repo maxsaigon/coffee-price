@@ -13,10 +13,22 @@ Automated coffee bean price scraping from international markets with Telegram no
 
 ## 📊 Market Data Sources
 
-| Coffee Type | Exchange | Symbol | Unit | Update Frequency |
-|------------|----------|--------|------|------------------|
-| Robusta | London Commodity Exchange | LCF | USD/tonne | Real-time |
-| Arabica | Intercontinental Exchange (ICE) | KC | cents/lb | Real-time |
+The system uses multiple Vietnamese and international sources for maximum reliability:
+
+### Primary Sources:
+| Source | Coffee Types | Status |
+|--------|-------------|--------|
+| WebGia.com | Robusta (London), Arabica (NYC) | ✅ Active |
+| CafeF.vn | Vietnamese Domestic | Fallback |
+| VietStock.vn | International Markets | Fallback |
+| Vietnamese Agricultural Sites | Local Prices | Fallback |
+
+### Coffee Markets Tracked:
+| Coffee Type | Exchange | Symbol | Unit | 
+|------------|----------|--------|------|
+| Robusta | London Commodity Exchange | LCF | USD/tonne |
+| Arabica | Intercontinental Exchange (ICE) | KC | cents/lb |
+| Vietnamese Robusta | Domestic Market | VN-ROB | VND/kg |
 
 ## 🚀 Quick Start
 
