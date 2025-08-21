@@ -107,6 +107,11 @@ on:
   workflow_dispatch:
 ```
 
+**Note**: The workflow has been updated to use the latest GitHub Actions:
+- `actions/checkout@v4`
+- `actions/setup-python@v5` 
+- `actions/upload-artifact@v4`
+
 ### 4.3 Manual Test Run
 1. Go to **Actions** tab
 2. Click **Coffee Price Tracker** workflow
