@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
 
 from config import Config
-from multi_source_coffee_scraper import MultiSourceCoffeeScraper
+from enhanced_multi_source_scraper import EnhancedMultiSourceScraper
 from telegram_bot import CoffeePriceNotifier
 
 # Configure logging
@@ -71,7 +71,7 @@ async def run_system_test():
         
         # Test scraper
         logger.info("Testing scraper...")
-        scraper = MultiSourceCoffeeScraper()
+        scraper = EnhancedMultiSourceScraper()
         
         # Test scraping
         test_data = scraper.scrape_all_prices()

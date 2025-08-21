@@ -75,3 +75,278 @@
 2025-08-21 14:11:58,122 - telegram_bot - INFO - Message sent successfully to Telegram
 2025-08-21 14:11:58,122 - telegram_bot - INFO - ✅ System test completed successfully
 2025-08-21 14:11:58,128 - __main__ - INFO - ✅ System test completed successfully
+2025-08-21 14:25:30,746 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: test
+2025-08-21 14:25:30,748 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:25:30.748027
+2025-08-21 14:25:30,748 - __main__ - INFO - 🧪 Starting system test...
+2025-08-21 14:25:30,748 - __main__ - INFO - Testing scraper...
+2025-08-21 14:25:30,748 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 14:25:30,748 - enhanced_multi_source_scraper - INFO - Trying source: GiaCaPhe Domestic
+2025-08-21 14:25:30,748 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-noi-dia/ (attempt 1/2)
+2025-08-21 14:25:31,129 - enhanced_multi_source_scraper - WARNING - No price points from GiaCaPhe Domestic
+2025-08-21 14:25:32,135 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 14:25:32,135 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:25:32,415 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 14:25:33,420 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:25:33,420 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:25:33,958 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:25:34,963 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:25:35,454 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:25:36,458 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 14:25:36,458 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 14:25:36,459 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:25:36,753 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:25:36,755 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:25:36,883 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:25:36,883 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 14:25:36,883 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 14:25:36,884 - enhanced_multi_source_scraper - INFO - ✅ Got 3 price points from Market Estimation
+2025-08-21 14:25:37,890 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 3 markets, 5 price points
+2025-08-21 14:25:37,890 - __main__ - INFO - ✅ Scraping test passed: 3 markets scraped
+2025-08-21 14:25:37,890 - __main__ - INFO - Testing Telegram bot...
+2025-08-21 14:25:37,890 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:25:37,890 - telegram_bot - INFO - Running system test...
+2025-08-21 14:25:38,853 - telegram_bot - INFO - Bot connection test successful: @baogiathitruongbot
+2025-08-21 14:25:39,955 - telegram_bot - INFO - Target chat: private
+2025-08-21 14:25:39,956 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 14:25:39,956 - enhanced_multi_source_scraper - INFO - Trying source: GiaCaPhe Domestic
+2025-08-21 14:25:39,956 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-noi-dia/ (attempt 1/2)
+2025-08-21 14:25:40,224 - enhanced_multi_source_scraper - WARNING - No price points from GiaCaPhe Domestic
+2025-08-21 14:25:41,229 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 14:25:41,229 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:25:41,468 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 14:25:42,473 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:25:42,477 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:25:43,038 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:25:44,042 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:25:44,272 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:25:45,272 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 14:25:45,273 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 14:25:45,273 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:25:45,523 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:25:45,524 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:25:45,712 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:25:45,712 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 14:25:45,712 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 14:25:45,713 - enhanced_multi_source_scraper - INFO - ✅ Got 3 price points from Market Estimation
+2025-08-21 14:25:46,719 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 3 markets, 5 price points
+2025-08-21 14:25:46,719 - telegram_bot - INFO - Scraper test successful: 3 markets
+2025-08-21 14:25:47,782 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 14:25:47,782 - telegram_bot - INFO - ✅ System test completed successfully
+2025-08-21 14:25:47,782 - __main__ - INFO - ✅ System test completed successfully
+2025-08-21 14:25:53,751 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 14:25:53,752 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:25:53.751996
+2025-08-21 14:25:53,752 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 14:25:53,752 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:25:53,752 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 14:25:53,752 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 14:25:53,752 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 14:25:53,752 - enhanced_multi_source_scraper - INFO - Trying source: GiaCaPhe Domestic
+2025-08-21 14:25:53,752 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-noi-dia/ (attempt 1/2)
+2025-08-21 14:25:54,019 - enhanced_multi_source_scraper - WARNING - No price points from GiaCaPhe Domestic
+2025-08-21 14:25:55,020 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 14:25:55,021 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:25:55,242 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 14:25:56,242 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:25:56,243 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:25:56,990 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:25:57,995 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:25:58,201 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:25:59,204 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 14:25:59,205 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 14:25:59,205 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:25:59,435 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:25:59,435 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:25:59,541 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:25:59,541 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 14:25:59,542 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 14:25:59,543 - enhanced_multi_source_scraper - INFO - ✅ Got 3 price points from Market Estimation
+2025-08-21 14:26:00,547 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 3 markets, 5 price points
+2025-08-21 14:26:00,547 - telegram_bot - INFO - Sending Telegram report...
+2025-08-21 14:26:01,537 - telegram_bot - ERROR - HTTP error: 400
+2025-08-21 14:26:01,538 - telegram_bot - ERROR - ❌ Daily report failed: Failed to send Telegram message
+2025-08-21 14:26:01,538 - __main__ - ERROR - ❌ Coffee price update failed
+2025-08-21 14:26:20,785 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: notify-test
+2025-08-21 14:26:20,785 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:26:20.785414
+2025-08-21 14:26:20,785 - __main__ - INFO - 📱 Sending test notification...
+2025-08-21 14:26:20,785 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:26:21,865 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 14:26:21,866 - __main__ - INFO - ✅ Test notification sent successfully
+2025-08-21 14:27:17,071 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 14:27:17,071 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:27:17.071883
+2025-08-21 14:27:17,071 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 14:27:17,071 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:27:17,071 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 14:27:17,072 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 14:27:17,072 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 14:27:17,072 - enhanced_multi_source_scraper - INFO - Trying source: GiaCaPhe Domestic
+2025-08-21 14:27:17,072 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-noi-dia/ (attempt 1/2)
+2025-08-21 14:27:17,334 - enhanced_multi_source_scraper - WARNING - No price points from GiaCaPhe Domestic
+2025-08-21 14:27:18,339 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 14:27:18,340 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:27:18,614 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 14:27:19,619 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:27:19,620 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:27:19,989 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:27:20,994 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:27:21,493 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:27:22,498 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 14:27:22,498 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 14:27:22,498 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:27:22,712 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:27:22,713 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:27:22,811 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:27:22,811 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 14:27:22,811 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 14:27:22,811 - enhanced_multi_source_scraper - INFO - ✅ Got 3 price points from Market Estimation
+2025-08-21 14:27:23,818 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 3 markets, 5 price points
+2025-08-21 14:27:23,819 - telegram_bot - INFO - Sending Telegram report...
+2025-08-21 14:27:24,772 - telegram_bot - ERROR - HTTP error: 400
+2025-08-21 14:27:24,773 - telegram_bot - ERROR - ❌ Daily report failed: Failed to send Telegram message
+2025-08-21 14:27:24,774 - __main__ - ERROR - ❌ Coffee price update failed
+2025-08-21 14:28:51,989 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 14:28:51,990 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:28:51.990534
+2025-08-21 14:28:51,990 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 14:28:51,990 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:28:51,990 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 14:28:51,991 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 14:28:51,991 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 14:28:51,991 - enhanced_multi_source_scraper - INFO - Trying source: GiaCaPhe Domestic
+2025-08-21 14:28:51,991 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-noi-dia/ (attempt 1/2)
+2025-08-21 14:28:52,273 - enhanced_multi_source_scraper - WARNING - No price points from GiaCaPhe Domestic
+2025-08-21 14:28:53,276 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 14:28:53,278 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:28:53,510 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 14:28:54,515 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:28:54,515 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:28:54,734 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:28:55,734 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:28:55,944 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:28:56,950 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 14:28:56,950 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 14:28:56,950 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:28:57,187 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:28:57,187 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:28:57,291 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:28:57,292 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 14:28:57,292 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 14:28:57,292 - enhanced_multi_source_scraper - INFO - ✅ Got 3 price points from Market Estimation
+2025-08-21 14:28:58,299 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 3 markets, 5 price points
+2025-08-21 14:28:58,299 - telegram_bot - INFO - Sending Telegram report...
+2025-08-21 14:28:59,457 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 14:28:59,457 - telegram_bot - INFO - ✅ Daily report completed successfully
+2025-08-21 14:28:59,457 - __main__ - INFO - ✅ Coffee price update completed successfully
+2025-08-21 14:45:43,008 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 14:45:43,009 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:45:43.009063
+2025-08-21 14:45:43,009 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 14:45:43,009 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:45:43,009 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 14:45:43,009 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 14:45:43,009 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 14:45:43,009 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 14:45:43,009 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:45:43,323 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 14:45:44,326 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:45:44,327 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:45:44,791 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:45:45,797 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:45:46,225 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:45:47,229 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 14:45:47,230 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 14:45:47,230 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:45:47,535 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:45:47,535 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:45:47,632 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:45:47,632 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 14:45:47,633 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 14:45:47,633 - enhanced_multi_source_scraper - INFO - ✅ Got 3 price points from Market Estimation
+2025-08-21 14:45:48,641 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 3 markets, 5 price points
+2025-08-21 14:45:48,643 - telegram_bot - INFO - Sending Telegram report...
+2025-08-21 14:45:49,897 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 14:45:49,898 - telegram_bot - INFO - ✅ Daily report completed successfully
+2025-08-21 14:45:49,898 - __main__ - INFO - ✅ Coffee price update completed successfully
+2025-08-21 14:50:55,692 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 14:50:55,693 - __main__ - INFO - 📅 Timestamp: 2025-08-21T14:50:55.693008
+2025-08-21 14:50:55,693 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 14:50:55,693 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 14:50:55,693 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 14:50:55,693 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 14:50:55,693 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 14:50:55,693 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 14:50:55,693 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 14:50:55,927 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 14:50:56,932 - enhanced_multi_source_scraper - INFO - Trying source: WebGia Vietnam Coffee
+2025-08-21 14:50:56,933 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe/ (attempt 1/2)
+2025-08-21 14:50:57,176 - enhanced_multi_source_scraper - INFO - ✅ Got 1 price points from WebGia Vietnam Coffee
+2025-08-21 14:50:58,182 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 14:50:58,189 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 14:50:58,468 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:50:59,474 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 14:50:59,906 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 14:51:00,914 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 14:51:00,916 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 14:51:00,916 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 14:51:01,178 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:51:01,178 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 14:51:01,295 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 14:51:01,295 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 14:51:01,295 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 14:51:01,296 - enhanced_multi_source_scraper - INFO - ✅ Got 3 price points from Market Estimation
+2025-08-21 14:51:02,298 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 4 markets, 6 price points
+2025-08-21 14:51:02,301 - telegram_bot - INFO - Sending Telegram report...
+2025-08-21 14:51:03,668 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 14:51:03,669 - telegram_bot - INFO - ✅ Daily report completed successfully
+2025-08-21 14:51:03,669 - __main__ - INFO - ✅ Coffee price update completed successfully
+2025-08-21 15:04:57,007 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 15:04:57,007 - __main__ - INFO - 📅 Timestamp: 2025-08-21T15:04:57.007361
+2025-08-21 15:04:57,007 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 15:04:57,007 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 15:04:57,007 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 15:04:57,007 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 15:04:57,007 - enhanced_multi_source_scraper - INFO - Starting enhanced multi-source coffee price scraping...
+2025-08-21 15:04:57,007 - enhanced_multi_source_scraper - INFO - Trying source: WebGia International
+2025-08-21 15:04:57,007 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-21 15:04:57,405 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from WebGia International
+2025-08-21 15:04:58,411 - enhanced_multi_source_scraper - INFO - Trying source: WebGia Vietnam Coffee
+2025-08-21 15:04:58,411 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe/ (attempt 1/2)
+2025-08-21 15:04:58,574 - enhanced_multi_source_scraper - INFO - ✅ Got 1 price points from WebGia Vietnam Coffee
+2025-08-21 15:04:59,580 - enhanced_multi_source_scraper - INFO - Trying source: CafeF Vietnam
+2025-08-21 15:04:59,580 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 1/2)
+2025-08-21 15:05:00,202 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 15:05:01,208 - enhanced_multi_source_scraper - INFO - Fetching https://cafef.vn/hang-hoa/ca-phe-robusta.chn (attempt 2/2)
+2025-08-21 15:05:01,899 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://cafef.vn/hang-hoa/ca-phe-robusta.chn: 404 Client Error: Not Found for url: https://cafef.vn/hang-hoa/ca-phe-robusta.chn
+2025-08-21 15:05:02,904 - enhanced_multi_source_scraper - WARNING - No content from CafeF Vietnam
+2025-08-21 15:05:02,904 - enhanced_multi_source_scraper - INFO - Trying source: VietStock Commodities
+2025-08-21 15:05:02,904 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 1/2)
+2025-08-21 15:05:03,271 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 15:05:03,271 - enhanced_multi_source_scraper - INFO - Fetching https://vietstock.vn/hang-hoa-ca-phe.htm (attempt 2/2)
+2025-08-21 15:05:03,392 - enhanced_multi_source_scraper - WARNING - Response too short from https://vietstock.vn/hang-hoa-ca-phe.htm
+2025-08-21 15:05:03,392 - enhanced_multi_source_scraper - WARNING - No content from VietStock Commodities
+2025-08-21 15:05:03,392 - enhanced_multi_source_scraper - INFO - Trying source: Market Estimation
+2025-08-21 15:05:03,392 - enhanced_multi_source_scraper - INFO - ✅ Got 2 price points from Market Estimation
+2025-08-21 15:05:04,397 - enhanced_multi_source_scraper - INFO - Enhanced scraping completed: 3 markets, 5 price points
+2025-08-21 15:05:04,397 - telegram_bot - INFO - Sending Telegram report...
+2025-08-21 15:05:05,596 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 15:05:05,596 - telegram_bot - INFO - ✅ Daily report completed successfully
+2025-08-21 15:05:05,596 - __main__ - INFO - ✅ Coffee price update completed successfully
+2025-08-21 15:26:21,740 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 15:26:21,741 - __main__ - INFO - 📅 Timestamp: 2025-08-21T15:26:21.741388
+2025-08-21 15:26:21,741 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 15:26:21,741 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 15:26:21,741 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 15:26:21,741 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 15:26:21,741 - enhanced_multi_source_scraper - INFO - Coffee price scraping temporarily disabled - awaiting correct data sources
+2025-08-21 15:26:21,741 - enhanced_multi_source_scraper - INFO - Scraping disabled: no sources configured
+2025-08-21 15:26:21,741 - telegram_bot - ERROR - ❌ Daily report failed: No price data could be scraped
+2025-08-21 15:26:21,741 - __main__ - ERROR - ❌ Coffee price update failed
+2025-08-21 15:26:36,805 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 15:26:36,805 - __main__ - INFO - 📅 Timestamp: 2025-08-21T15:26:36.805980
+2025-08-21 15:26:36,806 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-21 15:26:36,806 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 15:26:36,806 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-21 15:26:36,806 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-21 15:26:36,806 - enhanced_multi_source_scraper - INFO - Coffee price scraping temporarily disabled - awaiting correct data sources
+2025-08-21 15:26:36,806 - enhanced_multi_source_scraper - INFO - Scraping disabled: no sources configured
+2025-08-21 15:26:36,806 - telegram_bot - INFO - System in maintenance mode - sending maintenance notification
+2025-08-21 15:26:38,899 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-21 15:26:38,900 - telegram_bot - INFO - ✅ Maintenance notification sent successfully
+2025-08-21 15:26:38,900 - __main__ - INFO - ✅ Coffee price update completed successfully

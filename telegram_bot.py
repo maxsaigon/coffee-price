@@ -35,7 +35,7 @@ class TelegramBot:
         
         logger.info(f"Telegram bot initialized for chat: {self.chat_id}")
     
-    async def send_message(self, message: str, parse_mode: str = "Markdown") -> bool:
+    async def send_message(self, message: str, parse_mode: str = "") -> bool:
         """
         Send message to Telegram chat
         """
@@ -44,9 +44,11 @@ class TelegramBot:
         payload = {
             'chat_id': self.chat_id,
             'text': message,
-            'parse_mode': parse_mode,
             'disable_web_page_preview': True
         }
+        
+        if parse_mode:
+            payload['parse_mode'] = parse_mode
         
         try:
             async with aiohttp.ClientSession() as session:
@@ -60,7 +62,8 @@ class TelegramBot:
                             logger.error(f"Telegram API error: {result.get('description')}")
                             return False
                     else:
-                        logger.error(f"HTTP error: {response.status}")
+                        error_text = await response.text()
+                        logger.error(f"HTTP error: {response.status} - {error_text}")
                         return False
                         
         except Exception as e:
@@ -72,9 +75,9 @@ class TelegramBot:
         Send formatted coffee price report
         """
         try:
-            from multi_source_coffee_scraper import MultiSourceCoffeeScraper
+            from enhanced_multi_source_scraper import EnhancedMultiSourceScraper
             
-            scraper = MultiSourceCoffeeScraper()
+            scraper = EnhancedMultiSourceScraper()
             message = scraper.format_telegram_message(price_data)
             
             return await self.send_message(message)
@@ -189,16 +192,31 @@ class CoffeePriceNotifier:
         
         try:
             # Import here to avoid circular imports
-            from multi_source_coffee_scraper import MultiSourceCoffeeScraper
+            from enhanced_multi_source_scraper import EnhancedMultiSourceScraper
             
             # Initialize scraper
-            scraper = MultiSourceCoffeeScraper()
+            scraper = EnhancedMultiSourceScraper()
             
             # Scrape price data
             logger.info("Scraping coffee prices...")
             price_data = scraper.scrape_all_prices()
             
-            if not price_data or price_data.get('success_count', 0) == 0:
+            if not price_data:
+                raise Exception("No price data could be scraped")
+            
+            # Handle maintenance mode
+            if price_data.get('status') == 'Sources disabled - awaiting correct data source identification':
+                logger.info("System in maintenance mode - sending maintenance notification")
+                success = await self.bot.send_coffee_report(price_data)
+                if success:
+                    self.last_successful_run = datetime.now()
+                    self.consecutive_failures = 0
+                    logger.info("✅ Maintenance notification sent successfully")
+                    return True
+                else:
+                    raise Exception("Failed to send maintenance notification")
+            
+            if price_data.get('success_count', 0) == 0:
                 raise Exception("No price data could be scraped")
             
             # Send report
@@ -247,15 +265,15 @@ class CoffeePriceNotifier:
         
         # Test scraper
         try:
-            from investing_coffee_scraper import InvestingCoffeeScraper
-            scraper = InvestingCoffeeScraper()
+            from enhanced_multi_source_scraper import EnhancedMultiSourceScraper
+            scraper = EnhancedMultiSourceScraper()
             
             # Quick test scrape
-            test_data = scraper.scrape_single_coffee('robusta')
-            if not test_data:
+            test_data = scraper.scrape_all_prices()
+            if not test_data or test_data.get('success_count', 0) == 0:
                 logger.warning("Scraper test returned no data")
             else:
-                logger.info("Scraper test successful")
+                logger.info(f"Scraper test successful: {test_data.get('success_count', 0)} markets")
         
         except Exception as e:
             logger.error(f"Scraper test failed: {e}")
