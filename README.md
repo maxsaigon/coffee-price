@@ -37,7 +37,7 @@ Automated coffee bean price scraping from international markets with Telegram no
 
 ```bash
 # Clone and setup
-cd gianongsan
+
 pip install -r requirements.txt
 
 # Create environment file
