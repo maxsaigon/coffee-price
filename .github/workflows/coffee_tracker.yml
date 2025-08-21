@@ -1,0 +1,114 @@
+name: Coffee Price Tracker
+
+on:
+  # Scheduled runs at 8AM and 5PM Vietnam time (UTC+7)
+  # 8AM Vietnam = 1AM UTC, 5PM Vietnam = 10AM UTC
+  schedule:
+    - cron: '0 1 * * *'   # 8AM Vietnam time (1AM UTC)
+    - cron: '0 10 * * *'  # 5PM Vietnam time (10AM UTC)
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Command to run'
+        required: true
+        default: 'update'
+        type: choice
+        options:
+        - update
+        - test
+        - notify-test
+
+jobs:
+  coffee-price-update:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        cd gianongsan
+        pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run coffee price tracker
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        SCRAPER_TIMEOUT: '20'
+        SCRAPER_MAX_RETRIES: '3'
+        USD_TO_VND_RATE: '24000'
+        LOG_LEVEL: 'INFO'
+      run: |
+        cd gianongsan
+        python main.py ${{ github.event.inputs.command || 'update' }}
+    
+    - name: Upload logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: coffee-tracker-logs
+        path: gianongsan/coffee_tracker.log
+        retention-days: 7
+
+  # Health check job (runs once daily)
+  health-check:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 1 * * *'  # Only run with morning schedule
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        cd gianongsan
+        pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run system health check
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        cd gianongsan
+        python main.py test
+    
+    - name: Create health check report
+      if: always()
+      run: |
+        cd gianongsan
+        echo "## Coffee Tracker Health Check Report" > health_report.md
+        echo "**Date:** $(date)" >> health_report.md
+        echo "**Status:** ${{ job.status }}" >> health_report.md
+        echo "" >> health_report.md
+        
+        if [ -f coffee_tracker.log ]; then
+          echo "**Recent Logs:**" >> health_report.md
+          echo '```' >> health_report.md
+          tail -20 coffee_tracker.log >> health_report.md
+          echo '```' >> health_report.md
+        fi
+    
+    - name: Upload health report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: health-check-report
+        path: gianongsan/health_report.md
+        retention-days: 30
