@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-08-21T06:05:50.801865+00:00",
+  "international": {
+    "robusta": {
+      "error": "Failed to scrape",
+      "timestamp": "2025-08-21T06:05:51.029152+00:00"
+    },
+    "arabica": {
+      "error": "Failed to scrape",
+      "timestamp": "2025-08-21T06:05:51.212095+00:00"
+    }
+  },
+  "vietnam": {},
+  "success_count": 0,
+  "total_count": 2
+}

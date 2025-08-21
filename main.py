@@ -15,7 +15,7 @@ from pathlib import Path
 # Add current directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 
-from config import Config, load_env_file
+from config import Config
 from investing_coffee_scraper import InvestingCoffeeScraper
 from telegram_bot import CoffeePriceNotifier
 
@@ -163,8 +163,7 @@ async def main():
     
     args = parser.parse_args()
     
-    # Load environment variables
-    load_env_file()
+    # Environment variables are loaded by config.py
     
     # Setup logging
     setup_logging()

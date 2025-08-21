@@ -1,0 +1,94 @@
+2025-08-21 13:05:27,351 - INFO - 🌟 Coffee Price Tracker started - Command: config
+2025-08-21 13:05:27,351 - INFO - 📅 Timestamp: 2025-08-21T13:05:27.351790
+2025-08-21 13:05:34,170 - INFO - Starting full coffee price scraping...
+2025-08-21 13:05:34,170 - INFO - Scraping robusta...
+2025-08-21 13:05:34,170 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-21 13:05:34,951 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee
+2025-08-21 13:05:34,964 - ERROR - Could not find price for robusta
+2025-08-21 13:05:34,964 - WARNING - ❌ Failed to scrape robusta
+2025-08-21 13:05:34,964 - INFO - Scraping arabica...
+2025-08-21 13:05:34,964 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2025-08-21 13:05:36,328 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c
+2025-08-21 13:05:36,385 - ERROR - Could not find price for arabica
+2025-08-21 13:05:36,385 - WARNING - ❌ Failed to scrape arabica
+2025-08-21 13:05:36,385 - INFO - Scraping completed: 0/2 successful
+2025-08-21 13:05:43,135 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-21 13:05:43,243 - ERROR - Request failed (attempt 1): ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+2025-08-21 13:05:43,243 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/3)
+2025-08-21 13:05:45,346 - ERROR - Request failed (attempt 2): ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+2025-08-21 13:05:45,346 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 3/3)
+2025-08-21 13:05:49,852 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee
+2025-08-21 13:05:49,915 - ERROR - Could not find price for robusta
+2025-08-21 13:05:49,915 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2025-08-21 13:05:50,782 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c
+2025-08-21 13:05:50,801 - ERROR - Could not find price for arabica
+2025-08-21 13:05:50,801 - INFO - Starting full coffee price scraping...
+2025-08-21 13:05:50,801 - INFO - Scraping robusta...
+2025-08-21 13:05:50,801 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-21 13:05:50,983 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee
+2025-08-21 13:05:51,028 - ERROR - Could not find price for robusta
+2025-08-21 13:05:51,029 - WARNING - ❌ Failed to scrape robusta
+2025-08-21 13:05:51,029 - INFO - Scraping arabica...
+2025-08-21 13:05:51,029 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2025-08-21 13:05:51,200 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c
+2025-08-21 13:05:51,211 - ERROR - Could not find price for arabica
+2025-08-21 13:05:51,212 - WARNING - ❌ Failed to scrape arabica
+2025-08-21 13:05:51,212 - INFO - Scraping completed: 0/2 successful
+2025-08-21 13:35:13,534 - INFO - 🌟 Coffee Price Tracker started - Command: config
+2025-08-21 13:35:13,534 - INFO - 📅 Timestamp: 2025-08-21T13:35:13.534659
+2025-08-21 13:36:09,560 - INFO - 🌟 Coffee Price Tracker started - Command: test
+2025-08-21 13:36:09,560 - INFO - 📅 Timestamp: 2025-08-21T13:36:09.560488
+2025-08-21 13:36:09,560 - INFO - 🧪 Starting system test...
+2025-08-21 13:36:09,560 - ERROR - ❌ Configuration validation failed
+2025-08-21 13:36:46,065 - INFO - 🌟 Coffee Price Tracker started - Command: config
+2025-08-21 13:36:46,065 - INFO - 📅 Timestamp: 2025-08-21T13:36:46.065509
+2025-08-21 13:37:48,412 - INFO - 🌟 Coffee Price Tracker started - Command: config
+2025-08-21 13:37:48,413 - INFO - 📅 Timestamp: 2025-08-21T13:37:48.413097
+2025-08-21 13:41:00,445 - INFO - 🌟 Coffee Price Tracker started - Command: config
+2025-08-21 13:41:00,445 - INFO - 📅 Timestamp: 2025-08-21T13:41:00.445291
+2025-08-21 13:41:07,539 - INFO - 🌟 Coffee Price Tracker started - Command: notify-test
+2025-08-21 13:41:07,539 - INFO - 📅 Timestamp: 2025-08-21T13:41:07.539973
+2025-08-21 13:41:07,540 - INFO - 📱 Sending test notification...
+2025-08-21 13:41:07,540 - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 13:41:09,010 - INFO - Message sent successfully to Telegram
+2025-08-21 13:41:09,012 - INFO - ✅ Test notification sent successfully
+2025-08-21 13:41:17,211 - INFO - 🌟 Coffee Price Tracker started - Command: test
+2025-08-21 13:41:17,211 - INFO - 📅 Timestamp: 2025-08-21T13:41:17.211668
+2025-08-21 13:41:17,211 - INFO - 🧪 Starting system test...
+2025-08-21 13:41:17,211 - INFO - Testing scraper...
+2025-08-21 13:41:17,211 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-21 13:41:18,421 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee
+2025-08-21 13:41:18,473 - ERROR - Could not find price for robusta
+2025-08-21 13:41:18,473 - WARNING - ⚠️ Robusta scraping test failed
+2025-08-21 13:41:18,473 - INFO - Testing Telegram bot...
+2025-08-21 13:41:18,473 - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 13:41:18,473 - INFO - Running system test...
+2025-08-21 13:41:19,436 - INFO - Bot connection test successful: @baogiathitruongbot
+2025-08-21 13:41:20,510 - INFO - Target chat: private
+2025-08-21 13:41:20,510 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-21 13:41:20,971 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee
+2025-08-21 13:41:21,018 - ERROR - Could not find price for robusta
+2025-08-21 13:41:21,018 - WARNING - Scraper test returned no data
+2025-08-21 13:41:22,084 - INFO - Message sent successfully to Telegram
+2025-08-21 13:41:22,085 - INFO - ✅ System test completed successfully
+2025-08-21 13:41:22,089 - INFO - ✅ System test completed successfully
+2025-08-21 13:41:33,221 - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-21 13:41:33,221 - INFO - 📅 Timestamp: 2025-08-21T13:41:33.221651
+2025-08-21 13:41:33,221 - INFO - 🚀 Starting coffee price update...
+2025-08-21 13:41:33,221 - INFO - Telegram bot initialized for chat: 813750947
+2025-08-21 13:41:33,221 - INFO - Starting daily coffee price report...
+2025-08-21 13:41:33,221 - INFO - Scraping coffee prices...
+2025-08-21 13:41:33,221 - INFO - Starting full coffee price scraping...
+2025-08-21 13:41:33,221 - INFO - Scraping robusta...
+2025-08-21 13:41:33,221 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-21 13:41:33,824 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee
+2025-08-21 13:41:33,871 - ERROR - Could not find price for robusta
+2025-08-21 13:41:33,871 - WARNING - ❌ Failed to scrape robusta
+2025-08-21 13:41:33,871 - INFO - Scraping arabica...
+2025-08-21 13:41:33,871 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2025-08-21 13:41:34,046 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c
+2025-08-21 13:41:34,064 - ERROR - Could not find price for arabica
+2025-08-21 13:41:34,064 - WARNING - ❌ Failed to scrape arabica
+2025-08-21 13:41:34,064 - INFO - Scraping completed: 0/2 successful
+2025-08-21 13:41:34,064 - ERROR - ❌ Daily report failed: No price data could be scraped
+2025-08-21 13:41:34,066 - ERROR - ❌ Coffee price update failed
