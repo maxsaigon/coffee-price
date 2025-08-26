@@ -215,6 +215,7 @@ class InvestingMarketScraper:
                 
                 if attempt > 0:
                     # Exponential backoff with jitter
+                    import random
                     delay = 2 ** attempt + random.uniform(0, 1)
                     time.sleep(delay)
                 
