@@ -70,15 +70,21 @@ class TelegramBot:
             logger.error(f"Failed to send Telegram message: {e}")
             return False
     
-    async def send_coffee_report(self, price_data: Dict[str, Any]) -> bool:
+    async def send_coffee_report(self, price_data: Dict[str, Any], message_type: str = "update") -> bool:
         """
-        Send formatted coffee price report
+        Send formatted coffee price report with specified message type
         """
         try:
-            from enhanced_multi_source_scraper import EnhancedMultiSourceScraper
-            
-            scraper = EnhancedMultiSourceScraper()
-            message = scraper.format_telegram_message(price_data)
+            # Try importing the market scraper first
+            try:
+                from investing_market_scraper import InvestingMarketScraper
+                scraper = InvestingMarketScraper()
+                message = scraper.format_market_telegram_message(price_data, message_type)
+            except ImportError:
+                # Fallback to enhanced scraper
+                from enhanced_multi_source_scraper import EnhancedMultiSourceScraper
+                scraper = EnhancedMultiSourceScraper()
+                message = scraper.format_telegram_message(price_data)
             
             return await self.send_message(message)
             
