@@ -46,11 +46,11 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         SCRAPER_TIMEOUT: '20'
         SCRAPER_MAX_RETRIES: '3'
-        USD_TO_VND_RATE: '24000'
+        USD_TO_VND_RATE: '25000'
         LOG_LEVEL: 'INFO'
       run: |
-        
-        python main.py ${{ github.event.inputs.command || 'update' }}
+        # Run the market timing system
+        python run_market_timing.py ${{ github.event.inputs.command || 'update' }}
     
     - name: Upload logs on failure
       if: failure()
@@ -86,8 +86,8 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
-        
-        python main.py test
+        # Run comprehensive market timing system test
+        python run_market_timing.py test
     
     - name: Create health check report
       if: always()
