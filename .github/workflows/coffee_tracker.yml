@@ -18,6 +18,7 @@ on:
         options:
         - update
         - test
+        - quick-test
         - notify-test
 
 jobs:
@@ -51,13 +52,24 @@ jobs:
       run: |
         # Run the market timing system
         python run_market_timing.py ${{ github.event.inputs.command || 'update' }}
+        
+        # Show some basic status info
+        echo "=== Execution completed ==="
+        echo "Command: ${{ github.event.inputs.command || 'update' }}"
+        echo "Exit Code: $?"
+        echo "Time: $(TZ='Asia/Ho_Chi_Minh' date)"
+        if [ -f coffee_tracker.log ]; then
+          echo "Log file size: $(wc -l < coffee_tracker.log) lines"
+          echo "Last 5 log entries:"
+          tail -5 coffee_tracker.log
+        fi
     
     - name: Upload logs on failure
       if: failure()
       uses: actions/upload-artifact@v4
       with:
         name: coffee-tracker-logs
-        path: gianongsan/coffee_tracker.log
+        path: coffee_tracker.log
         retention-days: 7
 
   # Health check job (runs once daily)
@@ -92,23 +104,42 @@ jobs:
     - name: Create health check report
       if: always()
       run: |
-        
         echo "## Coffee Tracker Health Check Report" > health_report.md
         echo "**Date:** $(date)" >> health_report.md
         echo "**Status:** ${{ job.status }}" >> health_report.md
+        echo "**Vietnam Time:** $(TZ='Asia/Ho_Chi_Minh' date)" >> health_report.md
         echo "" >> health_report.md
         
+        # Add test results summary
+        echo "**Health Check Results:**" >> health_report.md
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "✅ All health checks passed" >> health_report.md
+        else
+          echo "❌ Some health checks failed" >> health_report.md
+        fi
+        echo "" >> health_report.md
+        
+        # Add recent logs if available
         if [ -f coffee_tracker.log ]; then
           echo "**Recent Logs:**" >> health_report.md
           echo '```' >> health_report.md
-          tail -20 coffee_tracker.log >> health_report.md
+          tail -30 coffee_tracker.log >> health_report.md
           echo '```' >> health_report.md
+        else
+          echo "**Log Status:** No log file found" >> health_report.md
         fi
+        
+        # Add system info
+        echo "" >> health_report.md
+        echo "**System Information:**" >> health_report.md
+        echo "- Python Version: $(python --version)" >> health_report.md
+        echo "- Working Directory: $(pwd)" >> health_report.md
+        echo "- Available Files: $(ls -la | head -10)" >> health_report.md
     
     - name: Upload health report
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: health-check-report
-        path: gianongsan/health_report.md
+        path: health_report.md
         retention-days: 30
