@@ -54,8 +54,48 @@ class EnhancedMultiSourceScraper:
         self.price_cache = {}  # Cache for recent prices
         
         # Enhanced source configuration with confidence scoring
-        # All sources temporarily disabled pending correct data source identification
-        self.sources = []
+        self.sources = [
+            {
+                'name': 'webgia_international',
+                'url': 'https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/',
+                'scraper_method': self.scrape_webgia_enhanced,
+                'confidence': 0.8,
+                'markets': ['robusta_london', 'arabica_newyork'],
+                'backup': False
+            },
+            {
+                'name': 'investing_robusta',
+                'url': 'https://www.investing.com/commodities/london-coffee',
+                'scraper_method': self.scrape_investing_robusta,
+                'confidence': 0.7,
+                'markets': ['robusta_london'],
+                'backup': True
+            },
+            {
+                'name': 'investing_arabica', 
+                'url': 'https://www.investing.com/commodities/us-coffee-c',
+                'scraper_method': self.scrape_investing_arabica,
+                'confidence': 0.7,
+                'markets': ['arabica_newyork'],
+                'backup': True
+            },
+            {
+                'name': 'giacaphe_vietnam',
+                'url': 'https://giacaphe.com/gia-ca-phe-hom-nay/',
+                'scraper_method': self.scrape_giacaphe,
+                'confidence': 0.6,
+                'markets': ['robusta_vietnam_south', 'robusta_vietnam_central'],
+                'backup': False
+            },
+            {
+                'name': 'webgia_vietnam',
+                'url': 'https://webgia.com/gia-ca-phe/',
+                'scraper_method': self.scrape_webgia_vietnam,
+                'confidence': 0.6,
+                'markets': ['robusta_vietnam_local'],
+                'backup': True
+            }
+        ]
         
         # Market information with price validation ranges
         self.market_info = {
@@ -386,6 +426,98 @@ class EnhancedMultiSourceScraper:
             logger.error(f"Error scraping enhanced CafeF: {e}")
             return results
     
+    def scrape_investing_robusta(self, html: str) -> List[PricePoint]:
+        """Scraper for Investing.com Robusta coffee futures"""
+        results = []
+        try:
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            # Look for price elements using various selectors
+            price_selectors = [
+                '[data-test="instrument-price-last"]',
+                '.text-2xl',
+                '.instrument-price_last__JQN7_',
+                '.pid-8830-last'
+            ]
+            
+            price_element = None
+            for selector in price_selectors:
+                price_element = soup.select_one(selector)
+                if price_element:
+                    break
+            
+            if price_element:
+                price_text = price_element.get_text(strip=True)
+                price_match = re.search(r'([\d,]+\.?\d*)', price_text.replace(',', ''))
+                
+                if price_match:
+                    price = float(price_match.group(1))
+                    
+                    if 2000 <= price <= 8000:  # Valid USD/tonne range
+                        confidence = self.validate_price(price, 'robusta_london')
+                        
+                        results.append(PricePoint(
+                            source='investing.com/robusta',
+                            price=price,
+                            unit='USD/tonne',
+                            timestamp=datetime.now(timezone.utc),
+                            confidence=confidence,
+                            market_type='robusta_london',
+                            raw_data=price_text
+                        ))
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error scraping Investing.com Robusta: {e}")
+            return results
+    
+    def scrape_investing_arabica(self, html: str) -> List[PricePoint]:
+        """Scraper for Investing.com Arabica coffee futures"""
+        results = []
+        try:
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            # Look for price elements
+            price_selectors = [
+                '[data-test="instrument-price-last"]',
+                '.text-2xl',
+                '.instrument-price_last__JQN7_',
+                '.pid-8832-last'
+            ]
+            
+            price_element = None
+            for selector in price_selectors:
+                price_element = soup.select_one(selector)
+                if price_element:
+                    break
+            
+            if price_element:
+                price_text = price_element.get_text(strip=True)
+                price_match = re.search(r'([\d,]+\.?\d*)', price_text.replace(',', ''))
+                
+                if price_match:
+                    price = float(price_match.group(1))
+                    
+                    if 100 <= price <= 400:  # Valid cents/lb range
+                        confidence = self.validate_price(price, 'arabica_newyork')
+                        
+                        results.append(PricePoint(
+                            source='investing.com/arabica',
+                            price=price,
+                            unit='cents/lb',
+                            timestamp=datetime.now(timezone.utc),
+                            confidence=confidence,
+                            market_type='arabica_newyork',
+                            raw_data=price_text
+                        ))
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error scraping Investing.com Arabica: {e}")
+            return results
+    
     def scrape_vietstock_enhanced(self, html: str) -> List[PricePoint]:
         """Enhanced VietStock scraper"""
         results = []
@@ -554,26 +686,113 @@ class EnhancedMultiSourceScraper:
     
     def scrape_all_prices(self) -> Dict[str, Any]:
         """Enhanced scraping with smart comparison"""
-        logger.info("Coffee price scraping temporarily disabled - awaiting correct data sources")
+        logger.info("🚀 Starting enhanced multi-source coffee price scraping...")
         
-        # Return empty results structure
+        all_price_points = []
+        sources_used = []
+        failed_sources = []
+        
+        # Scrape from all configured sources
+        for source in self.sources:
+            try:
+                logger.info(f"🌐 Scraping {source['name']} from {source['url']}")
+                
+                # Get page content
+                html = self.get_page_content(source['url'])
+                
+                if html:
+                    # Call the scraper method
+                    price_points = source['scraper_method'](html)
+                    
+                    if price_points:
+                        all_price_points.extend(price_points)
+                        sources_used.append(source['name'])
+                        logger.info(f"✅ {source['name']}: Found {len(price_points)} price points")
+                    else:
+                        logger.warning(f"⚠️ {source['name']}: No price points found")
+                        if not source.get('backup', False):
+                            failed_sources.append(source['name'])
+                else:
+                    logger.error(f"❌ {source['name']}: Failed to get page content")
+                    failed_sources.append(source['name'])
+                    
+                # Small delay between requests
+                time.sleep(1)
+                
+            except Exception as e:
+                logger.error(f"❌ Error scraping {source['name']}: {e}")
+                failed_sources.append(source['name'])
+        
+        logger.info(f"📊 Total price points collected: {len(all_price_points)}")
+        
+        # If no real data, use fallback estimates
+        if not all_price_points:
+            logger.warning("⚠️ No price data collected, using market estimates")
+            all_price_points = self.get_market_estimates()
+            sources_used = ['market_estimates']
+        
+        # Compare and analyze prices
+        comparisons = self.compare_prices(all_price_points)
+        
+        # Organize results
+        international_markets = {}
+        vietnam_markets = {}
+        
+        for market_type, comparison in comparisons.items():
+            market_data = {
+                'primary_price': comparison.primary_price.price,
+                'unit': comparison.primary_price.unit,
+                'reliability_score': comparison.reliability_score,
+                'recommendation': comparison.recommendation,
+                'source': comparison.primary_price.source,
+                'timestamp': comparison.primary_price.timestamp.isoformat(),
+                'comparison_data': {
+                    'price_range': comparison.price_range,
+                    'average_price': comparison.average_price,
+                    'median_price': comparison.median_price,
+                    'sources_count': len(comparison.all_prices)
+                }
+            }
+            
+            # Add market name
+            if market_type in self.market_info:
+                market_data['name_vi'] = self.market_info[market_type].get('name_vi', market_type)
+                market_data['name_en'] = self.market_info[market_type].get('name', market_type)
+            
+            # Categorize by market type
+            if 'vietnam' in market_type:
+                vietnam_markets[market_type] = market_data
+            else:
+                international_markets[market_type] = market_data
+        
+        # Calculate reliability summary
+        reliability_scores = [comp.reliability_score for comp in comparisons.values()]
+        high_confidence_count = sum(1 for score in reliability_scores if score > 0.7)
+        avg_reliability = statistics.mean(reliability_scores) if reliability_scores else 0
+        
         results = {
             'timestamp': datetime.now(timezone.utc).isoformat(),
-            'international': {},
-            'vietnam': {},
-            'comparisons': {},
-            'success_count': 0,
-            'total_price_points': 0,
-            'sources_used': [],
+            'international': international_markets,
+            'vietnam': vietnam_markets,
+            'comparisons': {k: {
+                'market_type': v.market_type,
+                'primary_price': v.primary_price.price,
+                'reliability_score': v.reliability_score,
+                'recommendation': v.recommendation
+            } for k, v in comparisons.items()},
+            'success_count': len(sources_used),
+            'total_price_points': len(all_price_points),
+            'sources_used': sources_used,
+            'failed_sources': failed_sources,
             'reliability_summary': {
-                'average_reliability': 0,
-                'high_confidence_markets': 0,
-                'total_markets': 0
+                'average_reliability': avg_reliability,
+                'high_confidence_markets': high_confidence_count,
+                'total_markets': len(comparisons)
             },
-            'status': 'Sources disabled - awaiting correct data source identification'
+            'status': 'Active' if sources_used else 'Failed - no sources available'
         }
         
-        logger.info("Scraping disabled: no sources configured")
+        logger.info(f"✅ Scraping completed: {results['success_count']} sources, {results['total_price_points']} price points")
         return results
     
     def format_telegram_message(self, price_data: Dict[str, Any]) -> str:

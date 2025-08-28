@@ -1,0 +1,118 @@
+2025-08-26 09:20:28,542 - INFO - 🧪 Starting Market Timing System Test Suite
+2025-08-26 09:20:28,542 - INFO - ============================================================
+2025-08-26 09:20:28,542 - INFO - 
+📋 Running Configuration Tests...
+2025-08-26 09:20:28,546 - INFO - ✅ Configuration Tests - All tests passed
+2025-08-26 09:20:28,546 - INFO - 
+📋 Running Market Status Tests...
+2025-08-26 09:20:28,546 - INFO - ✅ Market Status Tests - All tests passed
+2025-08-26 09:20:28,546 - INFO - 
+📋 Running Scraper Tests...
+2025-08-26 09:20:28,546 - INFO - Starting comprehensive coffee market scraping...
+2025-08-26 09:20:28,546 - INFO - Scraping robusta from Robusta Coffee...
+2025-08-26 09:20:28,546 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-26 09:20:29,584 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee (139985 chars)
+2025-08-26 09:20:29,684 - ERROR - No current price found for robusta
+2025-08-26 09:20:29,684 - WARNING - ❌ Failed to scrape robusta
+2025-08-26 09:20:29,684 - INFO - Scraping arabica from Arabica Coffee...
+2025-08-26 09:20:29,684 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2025-08-26 09:20:30,431 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c (140786 chars)
+2025-08-26 09:20:30,541 - ERROR - No current price found for arabica
+2025-08-26 09:20:30,541 - WARNING - ❌ Failed to scrape arabica
+2025-08-26 09:20:30,544 - INFO - Scraping completed: 0/2 successful
+2025-08-26 09:20:30,544 - WARNING - ⚠️ Scraper Tests - 1 tests failed
+2025-08-26 09:20:30,544 - INFO - 
+📋 Running Telegram Integration Tests...
+2025-08-26 09:20:30,551 - INFO - Telegram bot initialized for chat: 813750947
+2025-08-26 09:20:31,692 - INFO - Bot connection test successful: @baogiathitruongbot
+2025-08-26 09:20:32,738 - INFO - ✅ Telegram Integration Tests - All tests passed
+2025-08-26 09:20:32,738 - INFO - 
+📋 Running Scheduler Tests...
+2025-08-26 09:20:32,739 - INFO - Sending test message: system_test
+2025-08-26 09:20:32,739 - INFO - Starting comprehensive coffee market scraping...
+2025-08-26 09:20:32,739 - INFO - Scraping robusta from Robusta Coffee...
+2025-08-26 09:20:32,739 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-26 09:20:33,460 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee (139910 chars)
+2025-08-26 09:20:33,586 - ERROR - No current price found for robusta
+2025-08-26 09:20:33,586 - WARNING - ❌ Failed to scrape robusta
+2025-08-26 09:20:33,586 - INFO - Scraping arabica from Arabica Coffee...
+2025-08-26 09:20:33,586 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2025-08-26 09:20:34,174 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c (140602 chars)
+2025-08-26 09:20:34,275 - ERROR - No current price found for arabica
+2025-08-26 09:20:34,275 - WARNING - ❌ Failed to scrape arabica
+2025-08-26 09:20:34,275 - INFO - Scraping completed: 0/2 successful
+2025-08-26 09:20:34,275 - ERROR - Telegram bot not initialized
+2025-08-26 09:20:34,275 - WARNING - ⚠️ Scheduler Tests - 1 tests failed
+2025-08-26 09:20:34,275 - INFO - 
+📋 Running Message Formatting Tests...
+2025-08-26 09:20:34,275 - INFO - Starting comprehensive coffee market scraping...
+2025-08-26 09:20:34,275 - INFO - Scraping robusta from Robusta Coffee...
+2025-08-26 09:20:34,275 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-26 09:20:34,358 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee (140244 chars)
+2025-08-26 09:20:34,423 - ERROR - No current price found for robusta
+2025-08-26 09:20:34,423 - WARNING - ❌ Failed to scrape robusta
+2025-08-26 09:20:34,423 - INFO - Scraping arabica from Arabica Coffee...
+2025-08-26 09:20:34,423 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2025-08-26 09:20:34,512 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c (140543 chars)
+2025-08-26 09:20:34,569 - ERROR - No current price found for arabica
+2025-08-26 09:20:34,569 - WARNING - ❌ Failed to scrape arabica
+2025-08-26 09:20:34,569 - INFO - Scraping completed: 0/2 successful
+2025-08-26 09:20:34,569 - INFO - ✅ Message Formatting Tests - All tests passed
+2025-08-26 09:20:34,569 - INFO - 
+📋 Running Market Event Tests...
+2025-08-26 09:20:34,569 - INFO - ✅ Market Event Tests - All tests passed
+2025-08-26 09:20:34,569 - INFO - 
+============================================================
+2025-08-26 09:20:34,569 - INFO - 🏁 MARKET TIMING SYSTEM TEST SUMMARY
+2025-08-26 09:20:34,569 - INFO - ============================================================
+2025-08-26 09:20:34,569 - INFO - 📊 Overall Results:
+2025-08-26 09:20:34,569 - INFO -    • Test Suites: 5/7 passed
+2025-08-26 09:20:34,569 - INFO -    • Individual Tests: 22/24 passed
+2025-08-26 09:20:34,569 - INFO -    • Success Rate: 91.7%
+2025-08-26 09:20:34,569 - INFO - 
+⏰ Test Duration:
+2025-08-26 09:20:34,569 - INFO -    • Duration: 6.03 seconds
+2025-08-26 09:20:34,569 - INFO -    • Vietnam Time: 26/08/2025 09:20:28
+2025-08-26 09:20:34,569 - INFO - 
+📋 Suite Details:
+2025-08-26 09:20:34,569 - INFO -    ✅ Configuration Tests: 4/4 passed
+2025-08-26 09:20:34,569 - INFO -    ✅ Market Status Tests: 3/3 passed
+2025-08-26 09:20:34,569 - INFO -    ⚠️ Scraper Tests: 3/4 passed
+2025-08-26 09:20:34,569 - INFO -    ✅ Telegram Integration Tests: 3/3 passed
+2025-08-26 09:20:34,569 - INFO -    ⚠️ Scheduler Tests: 2/3 passed
+2025-08-26 09:20:34,569 - INFO -    ✅ Message Formatting Tests: 4/4 passed
+2025-08-26 09:20:34,569 - INFO -    ✅ Market Event Tests: 3/3 passed
+2025-08-26 09:20:34,569 - WARNING - 
+⚠️ Most tests passed with some failures. Review failed tests.
+2025-08-26 09:20:34,570 - INFO - 
+📄 Detailed results saved to: test_results_20250826_092034.json
+2025-08-26 09:20:56,437 - INFO - Telegram bot initialized for chat: 813750947
+2025-08-26 09:20:56,438 - INFO - Telegram bot initialized successfully
+2025-08-26 09:20:56,438 - INFO - Sending test message: scheduler_test
+2025-08-26 09:20:56,438 - INFO - Starting comprehensive coffee market scraping...
+2025-08-26 09:20:56,438 - INFO - Scraping robusta from Robusta Coffee...
+2025-08-26 09:20:56,438 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-26 09:20:56,513 - ERROR - Request failed (attempt 1): ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+2025-08-26 09:20:56,513 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/3)
+2025-08-26 09:20:56,513 - ERROR - Error sending test message: name 'random' is not defined
+2025-08-26 09:27:06,186 - INFO - 🎯 Market Timing Runner - Command: quick-test
+2025-08-26 09:27:06,216 - INFO - Telegram bot initialized for chat: 813750947
+2025-08-26 09:27:06,216 - INFO - Telegram bot initialized successfully
+2025-08-26 09:27:06,216 - INFO - ⚡ Running quick system test...
+2025-08-26 09:27:06,216 - INFO - ✅ Configuration valid
+2025-08-26 09:27:07,348 - INFO - Bot connection test successful: @baogiathitruongbot
+2025-08-26 09:27:07,349 - INFO - ✅ Telegram connection OK
+2025-08-26 09:27:07,349 - INFO - Starting comprehensive coffee market scraping...
+2025-08-26 09:27:07,349 - INFO - Scraping robusta from Robusta Coffee...
+2025-08-26 09:27:07,349 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2025-08-26 09:27:07,527 - ERROR - Request failed (attempt 1): ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+2025-08-26 09:27:07,528 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/3)
+2025-08-26 09:27:07,528 - WARNING - ⚠️ Scraping test failed: name 'random' is not defined
+2025-08-26 09:27:07,528 - INFO - ⚡ Quick test completed
+2025-08-26 09:27:07,528 - INFO - 🎉 Operation completed successfully
+2025-08-26 09:27:45,146 - INFO - 🎯 Market Timing Runner - Command: notify-test
+2025-08-26 09:27:45,176 - INFO - Telegram bot initialized for chat: 813750947
+2025-08-26 09:27:45,176 - INFO - Telegram bot initialized successfully
+2025-08-26 09:27:46,344 - INFO - Message sent successfully to Telegram
+2025-08-26 09:27:46,345 - INFO - ✅ Test notification sent
+2025-08-26 09:27:46,345 - INFO - 🎉 Operation completed successfully

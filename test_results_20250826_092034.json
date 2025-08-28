@@ -1,0 +1,172 @@
+{
+  "start_time": "2025-08-26T02:20:28.542429+00:00",
+  "vietnam_time": "26/08/2025 09:20:28",
+  "test_suites": {
+    "Configuration Tests": {
+      "tests": [
+        {
+          "name": "Config Manager Init",
+          "status": "passed"
+        },
+        {
+          "name": "Active Markets",
+          "status": "passed",
+          "count": 2
+        },
+        {
+          "name": "Notification Schedule",
+          "status": "passed",
+          "events": 7
+        },
+        {
+          "name": "Telegram Config",
+          "status": "passed"
+        }
+      ],
+      "passed": 4,
+      "failed": 0
+    },
+    "Market Status Tests": {
+      "tests": [
+        {
+          "name": "Market Status - ICE Europe (London)",
+          "status": "passed",
+          "market_status": "pre_market"
+        },
+        {
+          "name": "Market Status - ICE US (New York)",
+          "status": "passed",
+          "market_status": "after_hours"
+        },
+        {
+          "name": "Next Market Events",
+          "status": "passed",
+          "events_count": 3
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    "Scraper Tests": {
+      "tests": [
+        {
+          "name": "Scraper Init",
+          "status": "passed"
+        },
+        {
+          "name": "Market Data Scraping",
+          "status": "warning",
+          "success_count": 0,
+          "total_markets": 2
+        },
+        {
+          "name": "Robusta Market Status",
+          "status": "passed",
+          "market_status": "pre_market"
+        },
+        {
+          "name": "Arabica Market Status",
+          "status": "passed",
+          "market_status": "after_hours"
+        }
+      ],
+      "passed": 3,
+      "failed": 1
+    },
+    "Telegram Integration Tests": {
+      "tests": [
+        {
+          "name": "Bot Initialization",
+          "status": "passed"
+        },
+        {
+          "name": "Bot Connection",
+          "status": "passed"
+        },
+        {
+          "name": "Chat Access",
+          "status": "passed",
+          "chat_type": "private"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    "Scheduler Tests": {
+      "tests": [
+        {
+          "name": "Scheduler Init",
+          "status": "passed"
+        },
+        {
+          "name": "Market Events Info",
+          "status": "passed",
+          "events_count": 2
+        },
+        {
+          "name": "Scheduler-Telegram Integration",
+          "status": "failed",
+          "error": "Test message failed"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    "Message Formatting Tests": {
+      "tests": [
+        {
+          "name": "Message Format - market_open",
+          "status": "passed",
+          "message_length": 196
+        },
+        {
+          "name": "Message Format - market_close",
+          "status": "passed",
+          "message_length": 198
+        },
+        {
+          "name": "Message Format - pre_market",
+          "status": "passed",
+          "message_length": 194
+        },
+        {
+          "name": "Message Format - update",
+          "status": "passed",
+          "message_length": 194
+        }
+      ],
+      "passed": 4,
+      "failed": 0
+    },
+    "Market Event Tests": {
+      "tests": [
+        {
+          "name": "Market Event - Robusta Status",
+          "status": "passed",
+          "current_status": "pre_market"
+        },
+        {
+          "name": "Market Event - Arabica Status",
+          "status": "passed",
+          "current_status": "after_hours"
+        },
+        {
+          "name": "Pre-market Time Calculation",
+          "status": "passed",
+          "calculated_time": "08:30"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    }
+  },
+  "summary": {
+    "total_suites": 7,
+    "passed_suites": 5,
+    "failed_suites": 2,
+    "total_tests": 24,
+    "passed_tests": 22,
+    "failed_tests": 2
+  },
+  "end_time": "2025-08-26T02:20:34.569439+00:00"
+}

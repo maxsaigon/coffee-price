@@ -50,8 +50,8 @@ jobs:
         USD_TO_VND_RATE: '25000'
         LOG_LEVEL: 'INFO'
       run: |
-        # Run the market timing system
-        python run_market_timing.py ${{ github.event.inputs.command || 'update' }}
+        # Run the enhanced multi-source coffee tracker
+        python main.py ${{ github.event.inputs.command || 'update' }}
         
         # Show some basic status info
         echo "=== Execution completed ==="
@@ -98,8 +98,8 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
-        # Run comprehensive market timing system test
-        python run_market_timing.py test
+        # Run comprehensive system test using main.py
+        python main.py test
     
     - name: Create health check report
       if: always()

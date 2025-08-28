@@ -14,7 +14,7 @@ Complete guide to deploy the automated coffee price scraper with GitHub Actions.
 
 1. Open Telegram and search for `@BotFather`
 2. Start conversation and send `/newbot`
-3. Choose a name: `Coffee Price Tracker`
+3. Choose a name: ` `
 4. Choose a username: `your_coffee_bot` (must end with 'bot')
 5. Save the **Bot Token** (format: `123456:ABC-DEF...`)
 
@@ -106,11 +106,6 @@ on:
     - cron: '0 10 * * *'  # 5PM Vietnam (10AM UTC)
   workflow_dispatch:
 ```
-
-**Note**: The workflow has been updated to use the latest GitHub Actions:
-- `actions/checkout@v4`
-- `actions/setup-python@v5` 
-- `actions/upload-artifact@v4`
 
 ### 4.3 Manual Test Run
 1. Go to **Actions** tab
