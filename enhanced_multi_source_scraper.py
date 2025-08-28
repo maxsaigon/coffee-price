@@ -263,37 +263,193 @@ class EnhancedMultiSourceScraper:
         return estimates
     
     def scrape_webgia_enhanced(self, html: str) -> List[PricePoint]:
-        """Enhanced WebGia scraper with better parsing"""
+        """Enhanced WebGia scraper with real HTML parsing"""
         results = []
         try:
             soup = BeautifulSoup(html, 'html.parser')
             
-            # Enhanced parsing for international prices
-            if 'coffee' in html.lower() or 'cà phê' in html.lower():
-                # Current market estimates (fallback when dynamic content fails)
-                international_estimates = {
-                    'robusta_london': 4280.0,  # USD/tonne
-                    'arabica_newyork': 247.5   # cents/lb
-                }
-                
-                for market_type, price in international_estimates.items():
-                    confidence = 0.6  # Medium confidence for estimates
+            # Check if page has actual coffee data
+            if not ('coffee' in html.lower() or 'cà phê' in html.lower()):
+                return results
+            
+            # Look for coffee market sections
+            coffee_sections = [
+                ('robusta_london', ['Giá cà phê Robusta London', 'robusta london'], 'USD/tonne'),
+                ('arabica_newyork', ['Giá cà phê Arabica New York', 'arabica new york'], 'cents/lb'),
+            ]
+            
+            for market_key, heading_patterns, unit in coffee_sections:
+                try:
+                    # Find heading
+                    heading = None
+                    for pattern in heading_patterns:
+                        heading = soup.find(['h1', 'h2', 'h3', 'h4', 'h5'], 
+                                          string=lambda text: text and pattern.lower() in text.lower())
+                        if heading:
+                            break
                     
-                    results.append(PricePoint(
-                        source='webgia.com (enhanced)',
-                        price=price,
-                        unit=self.market_info[market_type]['unit'],
-                        timestamp=datetime.now(timezone.utc),
-                        confidence=confidence,
-                        market_type=market_type,
-                        raw_data=f'Enhanced estimate: {price}'
-                    ))
+                    if not heading:
+                        logger.debug(f"No heading found for {market_key}")
+                        continue
+                    
+                    # Find the table following this heading
+                    table = None
+                    for sibling in heading.find_all_next():
+                        if sibling.name == 'table':
+                            table = sibling
+                            break
+                        # Stop if we hit another coffee heading
+                        if sibling.name in ['h1', 'h2', 'h3', 'h4', 'h5']:
+                            if any(coffee in sibling.get_text().lower() for coffee in ['cà phê', 'coffee']):
+                                break
+                    
+                    if not table:
+                        logger.debug(f"No table found for {market_key}")
+                        continue
+                    
+                    # Parse the table
+                    price_data = self.parse_webgia_table(table)
+                    if price_data:
+                        confidence = self.validate_price(price_data['price'], market_key)
+                        
+                        results.append(PricePoint(
+                            source='webgia.com',
+                            price=price_data['price'],
+                            unit=unit,
+                            timestamp=datetime.now(timezone.utc),
+                            confidence=confidence,
+                            market_type=market_key,
+                            raw_data=price_data['raw_text']
+                        ))
+                        
+                        logger.info(f"✅ Parsed {market_key}: {price_data['price']} {unit}")
+                    
+                except Exception as e:
+                    logger.error(f"Error parsing {market_key}: {e}")
+                    continue
+            
+            # If no real prices found, use fallback estimates
+            if not results:
+                logger.warning("No real prices parsed, using fallback estimates")
+                return self.get_webgia_fallback()
             
             return results
             
         except Exception as e:
             logger.error(f"Error with enhanced WebGia scraper: {e}")
-            return results
+            return self.get_webgia_fallback()
+    
+    def parse_webgia_table(self, table) -> Optional[Dict[str, Any]]:
+        """Parse a WebGia market table to extract price data from High/Low columns"""
+        try:
+            rows = table.find_all('tr')
+            
+            if len(rows) < 2:
+                return None
+            
+            # Get header to understand column positions
+            header_row = rows[0]
+            header_cells = header_row.find_all(['td', 'th'])
+            header_texts = [cell.get_text(strip=True) for cell in header_cells]
+            
+            # Find column indices
+            high_col = None
+            low_col = None
+            current_col = None
+            
+            for i, header in enumerate(header_texts):
+                if 'cao nhất' in header.lower() or 'high' in header.lower():
+                    high_col = i
+                elif 'thấp nhất' in header.lower() or 'low' in header.lower():
+                    low_col = i
+                elif 'giá khớp' in header.lower() or 'current' in header.lower():
+                    current_col = i
+            
+            logger.debug(f"Column positions - High: {high_col}, Low: {low_col}, Current: {current_col}")
+            
+            # Look through data rows
+            for row in rows[1:]:  # Skip header
+                cells = row.find_all(['td', 'th'])
+                if len(cells) < len(header_texts):
+                    continue
+                
+                cell_texts = [cell.get_text(strip=True) for cell in cells]
+                
+                # Skip rows with only placeholder text
+                if all('webgia.com' in text for text in cell_texts if text):
+                    continue
+                
+                # Try to extract price from high/low columns (they seem to have real data)
+                price_candidates = []
+                
+                if high_col is not None and high_col < len(cell_texts):
+                    price_candidates.append(cell_texts[high_col])
+                
+                if low_col is not None and low_col < len(cell_texts):
+                    price_candidates.append(cell_texts[low_col])
+                
+                if current_col is not None and current_col < len(cell_texts):
+                    if 'webgia.com' not in cell_texts[current_col]:
+                        price_candidates.append(cell_texts[current_col])
+                
+                # Parse price candidates
+                for candidate in price_candidates:
+                    if not candidate or 'webgia.com' in candidate:
+                        continue
+                    
+                    # Extract the main number (before any + or - changes)
+                    # Format like "5,072+186" or "4,899+13"
+                    price_match = re.search(r'([0-9,]+)(?:[+-][0-9]+)?', candidate)
+                    
+                    if price_match:
+                        try:
+                            price_str = price_match.group(1).replace(',', '')
+                            price = float(price_str)
+                            
+                            # Reasonable ranges for coffee futures
+                            if 1000 <= price <= 10000:  # USD/tonne range
+                                logger.info(f"Extracted price {price} from '{candidate}'")
+                                return {
+                                    'price': price,
+                                    'raw_text': candidate
+                                }
+                            elif 100 <= price <= 500:  # cents/lb range
+                                logger.info(f"Extracted price {price} from '{candidate}'")
+                                return {
+                                    'price': price,
+                                    'raw_text': candidate
+                                }
+                        except ValueError:
+                            continue
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error parsing WebGia table: {e}")
+            return None
+    
+    def get_webgia_fallback(self) -> List[PricePoint]:
+        """Fallback estimates for WebGia when parsing fails"""
+        estimates = []
+        
+        # Current market estimates (should be updated regularly)
+        fallback_prices = {
+            'robusta_london': 4280.0,  # USD/tonne
+            'arabica_newyork': 247.5   # cents/lb
+        }
+        
+        for market_type, price in fallback_prices.items():
+            estimates.append(PricePoint(
+                source='webgia.com (fallback)',
+                price=price,
+                unit=self.market_info[market_type]['unit'],
+                timestamp=datetime.now(timezone.utc),
+                confidence=0.4,
+                market_type=market_type,
+                raw_data=f'Fallback estimate: {price}'
+            ))
+        
+        return estimates
     
     def scrape_webgia_vietnam(self, html: str) -> List[PricePoint]:
         """Scraper for WebGia Vietnam local coffee prices"""

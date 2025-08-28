@@ -468,3 +468,109 @@ Original exception(s) from parser:
 2025-08-27 17:50:29,385 - telegram_bot - INFO - Message sent successfully to Telegram
 2025-08-27 17:50:29,386 - telegram_bot - INFO - ✅ Daily report completed successfully
 2025-08-27 17:50:29,386 - __main__ - INFO - ✅ Coffee price update completed successfully
+2025-08-28 09:50:31,267 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: config
+2025-08-28 09:50:31,268 - __main__ - INFO - 📅 Timestamp: 2025-08-28T09:50:31.268134
+2025-08-28 09:50:31,469 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: test
+2025-08-28 09:50:31,469 - __main__ - INFO - 📅 Timestamp: 2025-08-28T09:50:31.469408
+2025-08-28 09:50:31,469 - __main__ - INFO - 🧪 Starting system test...
+2025-08-28 09:50:31,469 - __main__ - INFO - Testing scraper...
+2025-08-28 09:50:31,469 - enhanced_multi_source_scraper - INFO - 🚀 Starting enhanced multi-source coffee price scraping...
+2025-08-28 09:50:31,469 - enhanced_multi_source_scraper - INFO - 🌐 Scraping webgia_international from https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/
+2025-08-28 09:50:31,469 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-28 09:50:32,220 - enhanced_multi_source_scraper - INFO - ✅ webgia_international: Found 2 price points
+2025-08-28 09:50:33,227 - enhanced_multi_source_scraper - INFO - 🌐 Scraping investing_robusta from https://www.investing.com/commodities/london-coffee
+2025-08-28 09:50:33,370 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/2)
+2025-08-28 09:50:33,691 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://www.investing.com/commodities/london-coffee: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+2025-08-28 09:50:34,696 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/2)
+2025-08-28 09:50:35,439 - enhanced_multi_source_scraper - WARNING - ⚠️ investing_robusta: No price points found
+2025-08-28 09:50:36,441 - enhanced_multi_source_scraper - INFO - 🌐 Scraping investing_arabica from https://www.investing.com/commodities/us-coffee-c
+2025-08-28 09:50:36,442 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/2)
+2025-08-28 09:50:37,170 - enhanced_multi_source_scraper - WARNING - ⚠️ investing_arabica: No price points found
+2025-08-28 09:50:38,176 - enhanced_multi_source_scraper - INFO - 🌐 Scraping giacaphe_vietnam from https://giacaphe.com/gia-ca-phe-hom-nay/
+2025-08-28 09:50:38,176 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-hom-nay/ (attempt 1/2)
+2025-08-28 09:50:38,922 - enhanced_multi_source_scraper - WARNING - ⚠️ giacaphe_vietnam: No price points found
+2025-08-28 09:50:39,925 - enhanced_multi_source_scraper - INFO - 🌐 Scraping webgia_vietnam from https://webgia.com/gia-ca-phe/
+2025-08-28 09:50:39,926 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-ca-phe/ (attempt 1/2)
+2025-08-28 09:50:39,957 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://webgia.com/gia-ca-phe/: 404 Client Error: Not Found for url: https://webgia.com/gia-ca-phe/
+2025-08-28 09:50:40,962 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-ca-phe/ (attempt 2/2)
+2025-08-28 09:50:40,995 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://webgia.com/gia-ca-phe/: 404 Client Error: Not Found for url: https://webgia.com/gia-ca-phe/
+2025-08-28 09:50:41,996 - enhanced_multi_source_scraper - ERROR - ❌ webgia_vietnam: Failed to get page content
+2025-08-28 09:50:43,001 - enhanced_multi_source_scraper - INFO - 📊 Total price points collected: 2
+2025-08-28 09:50:43,002 - enhanced_multi_source_scraper - INFO - ✅ Scraping completed: 1 sources, 2 price points
+2025-08-28 09:50:43,002 - __main__ - INFO - ✅ Scraping test passed: 1 markets scraped
+2025-08-28 09:50:43,002 - __main__ - INFO - Testing Telegram bot...
+2025-08-28 09:50:43,002 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-28 09:50:43,002 - telegram_bot - INFO - Running system test...
+2025-08-28 09:50:44,146 - telegram_bot - INFO - Bot connection test successful: @baogiathitruongbot
+2025-08-28 09:50:45,185 - telegram_bot - INFO - Target chat: private
+2025-08-28 09:50:45,186 - enhanced_multi_source_scraper - INFO - 🚀 Starting enhanced multi-source coffee price scraping...
+2025-08-28 09:50:45,186 - enhanced_multi_source_scraper - INFO - 🌐 Scraping webgia_international from https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/
+2025-08-28 09:50:45,186 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-28 09:50:45,455 - enhanced_multi_source_scraper - INFO - ✅ webgia_international: Found 2 price points
+2025-08-28 09:50:46,460 - enhanced_multi_source_scraper - INFO - 🌐 Scraping investing_robusta from https://www.investing.com/commodities/london-coffee
+2025-08-28 09:50:46,460 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/2)
+2025-08-28 09:50:46,534 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://www.investing.com/commodities/london-coffee: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+2025-08-28 09:50:47,540 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/2)
+2025-08-28 09:50:48,286 - enhanced_multi_source_scraper - WARNING - ⚠️ investing_robusta: No price points found
+2025-08-28 09:50:49,292 - enhanced_multi_source_scraper - INFO - 🌐 Scraping investing_arabica from https://www.investing.com/commodities/us-coffee-c
+2025-08-28 09:50:49,292 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/2)
+2025-08-28 09:50:49,846 - enhanced_multi_source_scraper - WARNING - ⚠️ investing_arabica: No price points found
+2025-08-28 09:50:50,851 - enhanced_multi_source_scraper - INFO - 🌐 Scraping giacaphe_vietnam from https://giacaphe.com/gia-ca-phe-hom-nay/
+2025-08-28 09:50:50,852 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-hom-nay/ (attempt 1/2)
+2025-08-28 09:50:51,762 - enhanced_multi_source_scraper - WARNING - ⚠️ giacaphe_vietnam: No price points found
+2025-08-28 09:50:52,769 - enhanced_multi_source_scraper - INFO - 🌐 Scraping webgia_vietnam from https://webgia.com/gia-ca-phe/
+2025-08-28 09:50:52,787 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-ca-phe/ (attempt 1/2)
+2025-08-28 09:50:52,829 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://webgia.com/gia-ca-phe/: 404 Client Error: Not Found for url: https://webgia.com/gia-ca-phe/
+2025-08-28 09:50:53,834 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-ca-phe/ (attempt 2/2)
+2025-08-28 09:50:53,861 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://webgia.com/gia-ca-phe/: 404 Client Error: Not Found for url: https://webgia.com/gia-ca-phe/
+2025-08-28 09:50:54,866 - enhanced_multi_source_scraper - ERROR - ❌ webgia_vietnam: Failed to get page content
+2025-08-28 09:50:55,871 - enhanced_multi_source_scraper - INFO - 📊 Total price points collected: 2
+2025-08-28 09:50:55,873 - enhanced_multi_source_scraper - INFO - ✅ Scraping completed: 1 sources, 2 price points
+2025-08-28 09:50:55,873 - telegram_bot - INFO - Scraper test successful: 1 markets
+2025-08-28 09:50:57,022 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-28 09:50:57,024 - telegram_bot - INFO - ✅ System test completed successfully
+2025-08-28 09:50:57,024 - __main__ - INFO - ✅ System test completed successfully
+2025-08-28 09:50:57,352 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: notify-test
+2025-08-28 09:50:57,352 - __main__ - INFO - 📅 Timestamp: 2025-08-28T09:50:57.352733
+2025-08-28 09:50:57,352 - __main__ - INFO - 📱 Sending test notification...
+2025-08-28 09:50:57,352 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-28 09:50:58,429 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-28 09:50:58,429 - __main__ - INFO - ✅ Test notification sent successfully
+2025-08-28 10:43:56,492 - __main__ - INFO - 🌟 Coffee Price Tracker started - Command: update
+2025-08-28 10:43:56,493 - __main__ - INFO - 📅 Timestamp: 2025-08-28T10:43:56.493682
+2025-08-28 10:43:56,493 - __main__ - INFO - 🚀 Starting coffee price update...
+2025-08-28 10:43:56,493 - telegram_bot - INFO - Telegram bot initialized for chat: 813750947
+2025-08-28 10:43:56,493 - telegram_bot - INFO - Starting daily coffee price report...
+2025-08-28 10:43:56,493 - telegram_bot - INFO - Scraping coffee prices...
+2025-08-28 10:43:56,493 - enhanced_multi_source_scraper - INFO - 🚀 Starting enhanced multi-source coffee price scraping...
+2025-08-28 10:43:56,494 - enhanced_multi_source_scraper - INFO - 🌐 Scraping webgia_international from https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/
+2025-08-28 10:43:56,494 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-hang-hoa/ca-phe-the-gioi/ (attempt 1/2)
+2025-08-28 10:43:56,703 - enhanced_multi_source_scraper - INFO - Extracted price 5072.0 from '5,072+186'
+2025-08-28 10:43:56,704 - enhanced_multi_source_scraper - INFO - ✅ Parsed robusta_london: 5072.0 USD/tonne
+2025-08-28 10:43:56,709 - enhanced_multi_source_scraper - INFO - Extracted price 411.0 from '411.50-5.48'
+2025-08-28 10:43:56,709 - enhanced_multi_source_scraper - INFO - ✅ Parsed arabica_newyork: 411.0 cents/lb
+2025-08-28 10:43:56,709 - enhanced_multi_source_scraper - INFO - ✅ webgia_international: Found 2 price points
+2025-08-28 10:43:57,714 - enhanced_multi_source_scraper - INFO - 🌐 Scraping investing_robusta from https://www.investing.com/commodities/london-coffee
+2025-08-28 10:43:57,715 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/2)
+2025-08-28 10:43:57,817 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://www.investing.com/commodities/london-coffee: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+2025-08-28 10:43:58,821 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/2)
+2025-08-28 10:43:59,315 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://www.investing.com/commodities/london-coffee: 503 Server Error: Service Temporarily Unavailable for url: https://www.investing.com/commodities/london-coffee
+2025-08-28 10:44:00,320 - enhanced_multi_source_scraper - ERROR - ❌ investing_robusta: Failed to get page content
+2025-08-28 10:44:01,322 - enhanced_multi_source_scraper - INFO - 🌐 Scraping investing_arabica from https://www.investing.com/commodities/us-coffee-c
+2025-08-28 10:44:01,322 - enhanced_multi_source_scraper - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/2)
+2025-08-28 10:44:01,459 - enhanced_multi_source_scraper - WARNING - ⚠️ investing_arabica: No price points found
+2025-08-28 10:44:02,464 - enhanced_multi_source_scraper - INFO - 🌐 Scraping giacaphe_vietnam from https://giacaphe.com/gia-ca-phe-hom-nay/
+2025-08-28 10:44:02,464 - enhanced_multi_source_scraper - INFO - Fetching https://giacaphe.com/gia-ca-phe-hom-nay/ (attempt 1/2)
+2025-08-28 10:44:02,864 - enhanced_multi_source_scraper - WARNING - ⚠️ giacaphe_vietnam: No price points found
+2025-08-28 10:44:03,867 - enhanced_multi_source_scraper - INFO - 🌐 Scraping webgia_vietnam from https://webgia.com/gia-ca-phe/
+2025-08-28 10:44:03,868 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-ca-phe/ (attempt 1/2)
+2025-08-28 10:44:03,899 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://webgia.com/gia-ca-phe/: 404 Client Error: Not Found for url: https://webgia.com/gia-ca-phe/
+2025-08-28 10:44:04,905 - enhanced_multi_source_scraper - INFO - Fetching https://webgia.com/gia-ca-phe/ (attempt 2/2)
+2025-08-28 10:44:04,939 - enhanced_multi_source_scraper - WARNING - Failed to fetch https://webgia.com/gia-ca-phe/: 404 Client Error: Not Found for url: https://webgia.com/gia-ca-phe/
+2025-08-28 10:44:05,944 - enhanced_multi_source_scraper - ERROR - ❌ webgia_vietnam: Failed to get page content
+2025-08-28 10:44:06,945 - enhanced_multi_source_scraper - INFO - 📊 Total price points collected: 2
+2025-08-28 10:44:06,945 - enhanced_multi_source_scraper - INFO - ✅ Scraping completed: 1 sources, 2 price points
+2025-08-28 10:44:06,946 - telegram_bot - INFO - Sending Telegram report...
+2025-08-28 10:44:08,402 - telegram_bot - INFO - Message sent successfully to Telegram
+2025-08-28 10:44:08,402 - telegram_bot - INFO - ✅ Daily report completed successfully
+2025-08-28 10:44:08,402 - __main__ - INFO - ✅ Coffee price update completed successfully
