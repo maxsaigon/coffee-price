@@ -22,13 +22,17 @@ logger = logging.getLogger(__name__)
 class PricePoint:
     """Single price point from a source"""
     source: str
-    price: float
+    price: float  # Current/Last price
     unit: str
     timestamp: datetime
     confidence: float  # 0.0 to 1.0
     market_type: str
     raw_data: str
     location: Optional[str] = None
+    open_price: Optional[float] = None  # Opening price
+    close_price: Optional[float] = None  # Previous close
+    high_price: Optional[float] = None  # Daily high
+    low_price: Optional[float] = None   # Daily low
 
 @dataclass
 class PriceComparison:
@@ -77,22 +81,6 @@ class EnhancedMultiSourceScraper:
                 'scraper_method': self.scrape_investing_arabica,
                 'confidence': 0.7,
                 'markets': ['arabica_newyork'],
-                'backup': True
-            },
-            {
-                'name': 'giacaphe_vietnam',
-                'url': 'https://giacaphe.com/gia-ca-phe-hom-nay/',
-                'scraper_method': self.scrape_giacaphe,
-                'confidence': 0.6,
-                'markets': ['robusta_vietnam_south', 'robusta_vietnam_central'],
-                'backup': False
-            },
-            {
-                'name': 'webgia_vietnam',
-                'url': 'https://webgia.com/gia-ca-phe/',
-                'scraper_method': self.scrape_webgia_vietnam,
-                'confidence': 0.6,
-                'markets': ['robusta_vietnam_local'],
                 'backup': True
             }
         ]
@@ -190,48 +178,85 @@ class EnhancedMultiSourceScraper:
             
             soup = BeautifulSoup(html, 'html.parser')
             
-            # Look for price tables or containers
-            price_containers = soup.find_all(['div', 'span', 'td'], 
-                                           string=re.compile(r'[\d,]+', re.I))
+            # Look for tables with coffee prices
+            tables = soup.find_all('table')
             
-            # Look for regional indicators
-            regions = {'miền nam': 'robusta_vietnam_south', 'miền trung': 'robusta_vietnam_central'}
-            
-            for container in price_containers:
-                context_text = ""
-                if container.parent:
-                    context_text = container.parent.get_text().lower()
+            for table in tables:
+                # Look for rows with coffee-related content
+                rows = table.find_all('tr')
                 
-                # Look for coffee-related context
-                if any(keyword in context_text for keyword in ['cà phê', 'robusta', 'giá']):
-                    price_text = container.get_text(strip=True)
-                    price_match = re.search(r'([\d,]+)', price_text.replace('.', ','))
+                for row in rows:
+                    row_text = row.get_text().lower()
                     
-                    if price_match:
-                        try:
-                            price = float(price_match.group(1).replace(',', ''))
+                    # Check if this row contains coffee information
+                    if any(keyword in row_text for keyword in ['cà phê', 'robusta', 'coffee', 'giá']):
+                        cells = row.find_all(['td', 'th'])
+                        
+                        # Extract potential prices from cells
+                        for cell in cells:
+                            cell_text = cell.get_text(strip=True)
                             
-                            if price > 30000:  # Reasonable VND range
-                                # Determine region
-                                market_type = 'robusta_vietnam'
-                                for region_key, market_key in regions.items():
-                                    if region_key in context_text:
-                                        market_type = market_key
-                                        break
-                                
-                                confidence = self.validate_price(price, market_type)
-                                
-                                results.append(PricePoint(
-                                    source='giacaphe.com',
-                                    price=price,
-                                    unit='VND/kg',
-                                    timestamp=datetime.now(timezone.utc),
-                                    confidence=confidence,
-                                    market_type=market_type,
-                                    raw_data=price_text
-                                ))
-                        except ValueError:
-                            continue
+                            # Look for price patterns (Vietnamese prices are usually 5-6 digits)
+                            price_matches = re.findall(r'([0-9]{4,6}(?:[,\.][0-9]{1,3})?)', cell_text.replace(',', ''))
+                            
+                            for match in price_matches:
+                                try:
+                                    # Clean and convert price
+                                    clean_price = match.replace('.', '').replace(',', '')
+                                    price = float(clean_price)
+                                    
+                                    # Validate VND/kg price range
+                                    if 40000 <= price <= 120000:
+                                        # Determine region from context
+                                        market_type = 'robusta_vietnam_south'  # Default
+                                        if 'trung' in row_text or 'central' in row_text:
+                                            market_type = 'robusta_vietnam_central'
+                                        elif 'nam' in row_text or 'south' in row_text:
+                                            market_type = 'robusta_vietnam_south'
+                                        
+                                        confidence = self.validate_price(price, market_type)
+                                        
+                                        results.append(PricePoint(
+                                            source='giacaphe.com',
+                                            price=price,
+                                            unit='VND/kg',
+                                            timestamp=datetime.now(timezone.utc),
+                                            confidence=confidence,
+                                            market_type=market_type,
+                                            raw_data=cell_text
+                                        ))
+                                        
+                                        logger.info(f"✅ GiaCaPhe {market_type}: {price:,.0f} VND/kg")
+                                        
+                                except ValueError:
+                                    continue
+            
+            # If no results from tables, try broader search
+            if not results:
+                # Look for any large numbers that could be prices
+                all_text = soup.get_text()
+                price_numbers = re.findall(r'([0-9]{4,6})', all_text)
+                
+                for price_str in price_numbers[:5]:  # Check first 5 candidates
+                    try:
+                        price = float(price_str)
+                        if 45000 <= price <= 100000:  # Conservative range
+                            confidence = self.validate_price(price, 'robusta_vietnam_south')
+                            
+                            results.append(PricePoint(
+                                source='giacaphe.com',
+                                price=price,
+                                unit='VND/kg',
+                                timestamp=datetime.now(timezone.utc),
+                                confidence=confidence * 0.6,  # Lower confidence
+                                market_type='robusta_vietnam_south',
+                                raw_data=f'Pattern match: {price_str}'
+                            ))
+                            
+                            logger.info(f"✅ GiaCaPhe (pattern): {price:,.0f} VND/kg")
+                            break  # Take the first reasonable match
+                    except ValueError:
+                        continue
             
             return results
             
@@ -319,10 +344,15 @@ class EnhancedMultiSourceScraper:
                             timestamp=datetime.now(timezone.utc),
                             confidence=confidence,
                             market_type=market_key,
-                            raw_data=price_data['raw_text']
+                            raw_data=price_data['raw_text'],
+                            open_price=price_data.get('open_price'),
+                            close_price=price_data.get('close_price'),
+                            high_price=price_data.get('high_price'),
+                            low_price=price_data.get('low_price')
                         ))
                         
-                        logger.info(f"✅ Parsed {market_key}: {price_data['price']} {unit}")
+                        ohlc_info = f"O:{price_data.get('open_price', 'N/A')} H:{price_data.get('high_price', 'N/A')} L:{price_data.get('low_price', 'N/A')} C:{price_data.get('close_price', 'N/A')}"
+                        logger.info(f"✅ Parsed {market_key}: {price_data['price']} {unit} [{ohlc_info}]")
                     
                 except Exception as e:
                     logger.error(f"Error parsing {market_key}: {e}")
@@ -340,7 +370,7 @@ class EnhancedMultiSourceScraper:
             return self.get_webgia_fallback()
     
     def parse_webgia_table(self, table) -> Optional[Dict[str, Any]]:
-        """Parse a WebGia market table to extract price data from High/Low columns"""
+        """Parse a WebGia market table to extract OHLC price data"""
         try:
             rows = table.find_all('tr')
             
@@ -352,20 +382,27 @@ class EnhancedMultiSourceScraper:
             header_cells = header_row.find_all(['td', 'th'])
             header_texts = [cell.get_text(strip=True) for cell in header_cells]
             
-            # Find column indices
+            # Find column indices for OHLC data
+            open_col = None
             high_col = None
             low_col = None
+            close_col = None
             current_col = None
             
             for i, header in enumerate(header_texts):
-                if 'cao nhất' in header.lower() or 'high' in header.lower():
+                header_lower = header.lower()
+                if 'mở cửa' in header_lower or 'open' in header_lower:
+                    open_col = i
+                elif 'cao nhất' in header_lower or 'high' in header_lower:
                     high_col = i
-                elif 'thấp nhất' in header.lower() or 'low' in header.lower():
+                elif 'thấp nhất' in header_lower or 'low' in header_lower:
                     low_col = i
-                elif 'giá khớp' in header.lower() or 'current' in header.lower():
+                elif 'đóng cửa' in header_lower or 'close' in header_lower:
+                    close_col = i
+                elif 'giá khớp' in header_lower or 'current' in header_lower:
                     current_col = i
             
-            logger.debug(f"Column positions - High: {high_col}, Low: {low_col}, Current: {current_col}")
+            logger.debug(f"Column positions - Open: {open_col}, High: {high_col}, Low: {low_col}, Close: {close_col}, Current: {current_col}")
             
             # Look through data rows
             for row in rows[1:]:  # Skip header
@@ -379,48 +416,50 @@ class EnhancedMultiSourceScraper:
                 if all('webgia.com' in text for text in cell_texts if text):
                     continue
                 
-                # Try to extract price from high/low columns (they seem to have real data)
-                price_candidates = []
+                # Extract prices from available columns
+                result = {}
                 
-                if high_col is not None and high_col < len(cell_texts):
-                    price_candidates.append(cell_texts[high_col])
+                # Helper function to extract price from cell
+                def extract_price_from_cell(col_index):
+                    if col_index is not None and col_index < len(cell_texts):
+                        candidate = cell_texts[col_index]
+                        if candidate and 'webgia.com' not in candidate:
+                            # Extract the main number (before any + or - changes)
+                            price_match = re.search(r'([0-9,]+(?:\.[0-9]+)?)(?:[+-][0-9]+)?', candidate)
+                            if price_match:
+                                try:
+                                    price_str = price_match.group(1).replace(',', '')
+                                    price = float(price_str)
+                                    # Validate reasonable price range
+                                    if 100 <= price <= 10000:  # Covers both cents/lb and USD/tonne
+                                        return price, candidate
+                                except ValueError:
+                                    pass
+                    return None, None
                 
-                if low_col is not None and low_col < len(cell_texts):
-                    price_candidates.append(cell_texts[low_col])
+                # Extract all available prices
+                current_price, current_raw = extract_price_from_cell(current_col or high_col)  # Fallback to high if no current
+                open_price, _ = extract_price_from_cell(open_col)
+                high_price, _ = extract_price_from_cell(high_col)
+                low_price, _ = extract_price_from_cell(low_col)
+                close_price, _ = extract_price_from_cell(close_col)
                 
-                if current_col is not None and current_col < len(cell_texts):
-                    if 'webgia.com' not in cell_texts[current_col]:
-                        price_candidates.append(cell_texts[current_col])
+                # Use high price as fallback for current price if current not available
+                if current_price is None and high_price is not None:
+                    current_price, current_raw = high_price, f"High: {high_price}"
                 
-                # Parse price candidates
-                for candidate in price_candidates:
-                    if not candidate or 'webgia.com' in candidate:
-                        continue
+                if current_price is not None:
+                    result = {
+                        'price': current_price,
+                        'raw_text': current_raw,
+                        'open_price': open_price,
+                        'high_price': high_price,
+                        'low_price': low_price,
+                        'close_price': close_price
+                    }
                     
-                    # Extract the main number (before any + or - changes)
-                    # Format like "5,072+186" or "4,899+13"
-                    price_match = re.search(r'([0-9,]+)(?:[+-][0-9]+)?', candidate)
-                    
-                    if price_match:
-                        try:
-                            price_str = price_match.group(1).replace(',', '')
-                            price = float(price_str)
-                            
-                            # Reasonable ranges for coffee futures
-                            if 1000 <= price <= 10000:  # USD/tonne range
-                                logger.info(f"Extracted price {price} from '{candidate}'")
-                                return {
-                                    'price': price,
-                                    'raw_text': candidate
-                                }
-                            elif 100 <= price <= 500:  # cents/lb range
-                                logger.info(f"Extracted price {price} from '{candidate}'")
-                                return {
-                                    'price': price,
-                                    'raw_text': candidate
-                                }
-                        except ValueError:
-                            continue
+                    logger.info(f"Extracted OHLC - Current: {current_price}, Open: {open_price}, High: {high_price}, Low: {low_price}, Close: {close_price}")
+                    return result
             
             return None
             
@@ -593,18 +632,23 @@ class EnhancedMultiSourceScraper:
                 '[data-test="instrument-price-last"]',
                 '.text-2xl',
                 '.instrument-price_last__JQN7_',
-                '.pid-8830-last'
+                '.pid-8830-last',
+                '[class*="price"]',
+                '[class*="last"]'
             ]
             
             price_element = None
             for selector in price_selectors:
                 price_element = soup.select_one(selector)
                 if price_element:
+                    logger.debug(f"Found price element with selector: {selector}")
                     break
             
             if price_element:
                 price_text = price_element.get_text(strip=True)
-                price_match = re.search(r'([\d,]+\.?\d*)', price_text.replace(',', ''))
+                # Remove commas and extract number
+                clean_text = price_text.replace(',', '')
+                price_match = re.search(r'([\d]+\.?\d*)', clean_text)
                 
                 if price_match:
                     price = float(price_match.group(1))
@@ -621,6 +665,8 @@ class EnhancedMultiSourceScraper:
                             market_type='robusta_london',
                             raw_data=price_text
                         ))
+                        
+                        logger.info(f"✅ Investing.com Robusta: {price} USD/tonne")
             
             return results
             
@@ -639,18 +685,23 @@ class EnhancedMultiSourceScraper:
                 '[data-test="instrument-price-last"]',
                 '.text-2xl',
                 '.instrument-price_last__JQN7_',
-                '.pid-8832-last'
+                '.pid-8832-last',
+                '[class*="price"]',
+                '[class*="last"]'
             ]
             
             price_element = None
             for selector in price_selectors:
                 price_element = soup.select_one(selector)
                 if price_element:
+                    logger.debug(f"Found price element with selector: {selector}")
                     break
             
             if price_element:
                 price_text = price_element.get_text(strip=True)
-                price_match = re.search(r'([\d,]+\.?\d*)', price_text.replace(',', ''))
+                # Remove commas and extract number
+                clean_text = price_text.replace(',', '')
+                price_match = re.search(r'([\d]+\.?\d*)', clean_text)
                 
                 if price_match:
                     price = float(price_match.group(1))
@@ -667,6 +718,8 @@ class EnhancedMultiSourceScraper:
                             market_type='arabica_newyork',
                             raw_data=price_text
                         ))
+                        
+                        logger.info(f"✅ Investing.com Arabica: {price} cents/lb")
             
             return results
             
@@ -837,6 +890,9 @@ class EnhancedMultiSourceScraper:
                 reliability_score=reliability,
                 recommendation=recommendation
             )
+            
+            # Store primary price data for OHLC access
+            comparisons[market_type].primary_price_data = primary_price
         
         return comparisons
     
@@ -907,6 +963,12 @@ class EnhancedMultiSourceScraper:
                     'average_price': comparison.average_price,
                     'median_price': comparison.median_price,
                     'sources_count': len(comparison.all_prices)
+                },
+                'ohlc_data': {
+                    'open_price': comparison.primary_price.open_price,
+                    'high_price': comparison.primary_price.high_price,
+                    'low_price': comparison.primary_price.low_price,
+                    'close_price': comparison.primary_price.close_price
                 }
             }
             
@@ -952,10 +1014,10 @@ class EnhancedMultiSourceScraper:
         return results
     
     def format_telegram_message(self, price_data: Dict[str, Any]) -> str:
-        """Enhanced Telegram message with price comparison info"""
+        """Enhanced Telegram message with OHLC price data"""
         timestamp = datetime.now().strftime('%d/%m/%Y %H:%M')
         
-        message = f"☕ BÁO GIÁ CÀ PHÊ\n"
+        message = f"☕ BÁO GIÁ CÀ PHÊ QUỐC TẾ\n"
         message += f"📅 {timestamp} (GMT+7)\n\n"
         
         # Check if sources are disabled
@@ -964,11 +1026,10 @@ class EnhancedMultiSourceScraper:
             message += f"📋 Đang cập nhật nguồn dữ liệu chính xác\n"
             message += f"🔧 Tất cả nguồn hiện tại đã được tắt\n"
             message += f"⏳ Vui lòng chờ cập nhật nguồn đáng tin cậy\n\n"
-            message += f"📞 Liên hệ admin để cung cấp nguồn dữ liệu chính xác\n\n"
             message += f"🤖 GiaNongSan Bot - Chế độ bảo trì"
             return message
         
-        # International markets
+        # International markets only
         international = price_data.get('international', {})
         
         if 'robusta_london' in international:
@@ -977,19 +1038,26 @@ class EnhancedMultiSourceScraper:
             price_vnd = price * 26000
             reliability = data['reliability_score']
             
-            message += f"🌱 ROBUSTA (London)\n"
-            message += f"💰 Giá: ${price:,.2f}/tấn\n"
+            message += f"🌱 ROBUSTA COFFEE (London ICE)\n"
+            message += f"💰 Hiện tại: ${price:,.2f}/tấn\n"
             message += f"💸 VND: {price_vnd:,.0f}/tấn\n"
-            message += f"📊 Độ tin cậy: {reliability:.1%}\n"
             
-            # Add comparison info if multiple sources
-            comp_data = data.get('comparison_data', {})
-            if comp_data.get('sources_count', 0) > 1:
-                min_price, max_price = comp_data['price_range']
-                message += f"📈 Khoảng giá: ${min_price:,.0f} - ${max_price:,.0f}\n"
-                message += f"🔍 {comp_data['sources_count']} nguồn\n"
+            # Add OHLC data if available  
+            ohlc = data.get('ohlc_data', {})
+            ohlc_parts = []
+            if ohlc.get('open_price'):
+                ohlc_parts.append(f"Mở: ${ohlc['open_price']:,.0f}")
+            if ohlc.get('high_price'):
+                ohlc_parts.append(f"Cao: ${ohlc['high_price']:,.0f}")
+            if ohlc.get('low_price'):
+                ohlc_parts.append(f"Thấp: ${ohlc['low_price']:,.0f}")
+            if ohlc.get('close_price'):
+                ohlc_parts.append(f"Đóng: ${ohlc['close_price']:,.0f}")
             
-            message += f"💬 {data['recommendation']}\n\n"
+            if ohlc_parts:
+                message += f"📊 {' | '.join(ohlc_parts)}\n"
+            
+            message += f"📊 Độ tin cậy: {reliability:.1%}\n\n"
         
         if 'arabica_newyork' in international:
             data = international['arabica_newyork']
@@ -1000,47 +1068,27 @@ class EnhancedMultiSourceScraper:
                 price_usd_tonne = (price / 100) * 2204.62
                 price_vnd = price_usd_tonne * 26000
                 
-                message += f"☕ ARABICA (New York)\n"
-                message += f"💰 Giá: {price:.2f} cents/lb\n"
+                message += f"☕ ARABICA COFFEE (NYC ICE)\n"
+                message += f"💰 Hiện tại: {price:.2f} cents/lb\n"
                 message += f"💰 USD: ${price_usd_tonne:,.2f}/tấn\n"
                 message += f"💸 VND: {price_vnd:,.0f}/tấn\n"
-            else:
-                price_vnd = price * 26000
-                message += f"☕ ARABICA (New York)\n"
-                message += f"💰 Giá: ${price:,.2f}/tấn\n"
-                message += f"💸 VND: {price_vnd:,.0f}/tấn\n"
-            
-            message += f"📊 Độ tin cậy: {reliability:.1%}\n"
-            
-            # Add comparison info
-            comp_data = data.get('comparison_data', {})
-            if comp_data.get('sources_count', 0) > 1:
-                message += f"🔍 {comp_data['sources_count']} nguồn so sánh\n"
-            
-            message += f"💬 {data['recommendation']}\n\n"
-        
-        # Vietnam domestic markets
-        vietnam = price_data.get('vietnam', {})
-        
-        if vietnam:
-            message += f"🇻🇳 GIÁ CÀ PHÊ TRONG NƯỚC\n\n"
-            
-            for market_key, data in vietnam.items():
-                price = data['primary_price']
-                name = data.get('name_vi', market_key)
-                reliability = data['reliability_score']
                 
-                message += f"📍 {name}\n"
-                message += f"💰 Giá: {price:,.0f} VND/kg\n"
-                message += f"📊 Độ tin cậy: {reliability:.1%}\n"
+                # Add OHLC data if available
+                ohlc = data.get('ohlc_data', {})
+                ohlc_parts = []
+                if ohlc.get('open_price'):
+                    ohlc_parts.append(f"Mở: {ohlc['open_price']:.1f}¢")
+                if ohlc.get('high_price'):
+                    ohlc_parts.append(f"Cao: {ohlc['high_price']:.1f}¢")
+                if ohlc.get('low_price'):
+                    ohlc_parts.append(f"Thấp: {ohlc['low_price']:.1f}¢")
+                if ohlc.get('close_price'):
+                    ohlc_parts.append(f"Đóng: {ohlc['close_price']:.1f}¢")
                 
-                # Comparison info
-                comp_data = data.get('comparison_data', {})
-                if comp_data.get('sources_count', 0) > 1:
-                    min_price, max_price = comp_data['price_range']
-                    message += f"📈 Khoảng giá: {min_price:,.0f} - {max_price:,.0f} VND/kg\n"
-                
-                message += f"💬 {data['recommendation']}\n\n"
+                if ohlc_parts:
+                    message += f"📊 {' | '.join(ohlc_parts)}\n"
+            
+            message += f"📊 Độ tin cậy: {reliability:.1%}\n\n"
         
         # Overall reliability summary
         reliability_summary = price_data.get('reliability_summary', {})
@@ -1060,19 +1108,19 @@ class EnhancedMultiSourceScraper:
                 status_text = "Cần xác minh thêm"
             
             message += f"{status_emoji} TỔNG QUAN\n"
-            message += f"📊 Độ tin cậy trung bình: {avg_reliability:.1%}\n"
-            message += f"🎯 {high_confidence}/{total_markets} thị trường tin cậy cao\n"
+            message += f"📊 Độ tin cậy: {avg_reliability:.1%}\n"
+            message += f"🎯 {high_confidence}/{total_markets} thị trường tin cậy\n"
             message += f"💬 {status_text}\n\n"
         
         sources_used = price_data.get('sources_used', [])
         if len(sources_used) > 1:
             message += f"📡 Nguồn: {', '.join(sources_used[:2])}"
             if len(sources_used) > 2:
-                message += f" +{len(sources_used) - 2} nguồn khác"
+                message += f" +{len(sources_used) - 2} nguồn"
         elif sources_used:
             message += f"📡 Nguồn: {sources_used[0]}"
         
-        message += f"\n\n🤖 Hệ thống so sánh giá thông minh - GiaNongSan Bot"
+        message += f"\n\n🌐 Thị trường cà phê quốc tế - GiaNongSan Bot"
         
         return message
 
