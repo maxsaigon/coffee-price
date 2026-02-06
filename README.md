@@ -1,297 +1,88 @@
 # ☕ Coffee Price Tracker - GiaNongSan
 
-Automated coffee bean price scraping from international markets with Telegram notifications. Designed for Vietnamese coffee market analysis.
+Automated coffee bean price scraping from international and Vietnamese domestic markets with Telegram notifications.
 
 ## 🎯 Features
 
-- **Automated Price Scraping**: Robusta (London) & Arabica (NYC) futures from Investing.com
-- **Telegram Notifications**: Daily price reports in Vietnamese 
-- **GitHub Actions Scheduling**: Runs automatically at 8AM & 5PM Vietnam time
-- **Multiple Fallback Strategies**: Handles anti-bot protection
-- **Currency Conversion**: USD to VND conversion for local market
-- **Error Handling**: Robust error detection and notification system
+- **International Prices**: Arabica (NYC) & Robusta (London) via Yahoo Finance (`yfinance`).
+- **Domestic Prices**: Real-time prices from **Chocaphe.vn** (Dak Lak, Lam Dong, Gia Lai, Dak Nong).
+- **Telegram Notifications**: Daily reports with price changes and trends.
+- **GitHub Actions**: Automated scheduling (8AM & 5PM Vietnam time).
+- **Reliability**: Parallel scraping, retry logic, and fallback strategies.
 
-## 📊 Market Data Sources
+## 📊 Data Sources
 
-The system uses multiple Vietnamese and international sources for maximum reliability:
-
-### Primary Sources:
-| Source | Coffee Types | Status |
-|--------|-------------|--------|
-| WebGia.com | Robusta (London), Arabica (NYC) | ✅ Active |
-| CafeF.vn | Vietnamese Domestic | Fallback |
-| VietStock.vn | International Markets | Fallback |
-| Vietnamese Agricultural Sites | Local Prices | Fallback |
-
-### Coffee Markets Tracked:
-| Coffee Type | Exchange | Symbol | Unit | 
-|------------|----------|--------|------|
-| Robusta | London Commodity Exchange | LCF | USD/tonne |
-| Arabica | Intercontinental Exchange (ICE) | KC | cents/lb |
-| Vietnamese Robusta | Domestic Market | VN-ROB | VND/kg |
+| Market | Source | Update Freq | Status |
+|--------|--------|-------------|--------|
+| **International** | Yahoo Finance (`KC=F`) | ~10 mins delayed | ✅ Active |
+| **Domestic** | Chocaphe.vn | Real-time | ✅ Active |
 
 ## 🚀 Quick Start
 
 ### 1. Prerequisites
 
 - Python 3.11+
-- Telegram Bot Token
-- GitHub repository (for automation)
+- Telegram Bot Token & Chat ID
+- GitHub account (for automation)
 
-### 2. Setup Telegram Bot
-
-1. Create bot via [@BotFather](https://t.me/botfather)
-2. Get bot token (format: `123456:ABC-DEF...`)
-3. Add bot to your channel/group
-4. Get chat ID (use [@userinfobot](https://t.me/userinfobot))
-
-### 3. Local Development
+### 2. Local Setup
 
 ```bash
-# Clone and setup
+# Clone
+git clone https://github.com/maxsaigon/coffee-price.git
+cd coffee-price
 
+# Install dependencies
 pip install -r requirements.txt
 
-# Create environment file
+# Configure Environment
 cp .env.example .env
-# Edit .env with your tokens
-
-# Test system
-python main.py test
-
-# Send test notification
-python main.py notify-test
-
-# Run price update
-python main.py update
+# Edit .env and add your TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
 ```
 
-### 4. GitHub Actions Deployment
+### 3. Usage
 
-1. **Add Repository Secrets:**
-   - `TELEGRAM_BOT_TOKEN`: Your bot token
-   - `TELEGRAM_CHAT_ID`: Target chat ID
+**Run as a python module:**
 
-2. **Push to GitHub:**
-   ```bash
-   git add .
-   git commit -m "Setup coffee price tracker"
-   git push origin main
-   ```
+```bash
+# 1. Test data fetching (prints to console, no telegram)
+python -m src.main test
 
-3. **Automatic Scheduling:**
-   - 8:00 AM Vietnam time (1:00 AM UTC)
-   - 5:00 PM Vietnam time (10:00 AM UTC)
+# 2. Run manual update (sends telegram)
+python -m src.main update
+```
+
+## 🤖 GitHub Actions Automation
+
+The project includes a pre-configured workflow `.github/workflows/coffee_tracker.yml` that runs automatically.
+
+### Setup Steps:
+
+1. Go to your GitHub Repository -> **Settings** -> **Secrets and variables** -> **Actions**.
+2. Add the following **Repository secrets**:
+   - `TELEGRAM_BOT_TOKEN`: Your bot token.
+   - `TELEGRAM_CHAT_ID`: Your target chat ID.
+
+### Schedule:
+- **Morning Update**: 08:00 AM (Vietnam Time)
+- **Evening Update**: 17:00 PM (Vietnam Time)
 
 ## 📁 Project Structure
 
-```
+```text
 gianongsan/
-├── main.py                           # Entry point
-├── investing_coffee_scraper.py       # Core scraper
-├── telegram_bot.py                   # Telegram integration
-├── config.py                         # Configuration management
-├── requirements.txt                  # Dependencies
-├── test_scraper.py                   # Testing utilities
-├── .github/workflows/
-│   └── coffee_tracker.yml           # GitHub Actions workflow
-├── README.md                         # This file
-└── .env.example                      # Environment template
+├── src/
+│   ├── main.py                # Entry point
+│   ├── config.py              # Configuration
+│   ├── providers/             # Data Fetchers
+│   │   ├── yfinance_client.py # Yahoo Finance Provider
+│   │   └── chocaphe_scraper.py# Chocaphe.vn Provider
+│   └── services/              # Notification Services
+├── .github/workflows/         # Automation workflows
+├── requirements.txt           # Dependencies
+└── README.md                  # Documentation
 ```
 
-## 🔧 Configuration
+## 🛡️ License
 
-### Environment Variables
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `TELEGRAM_BOT_TOKEN` | Telegram bot token | - | ✅ |
-| `TELEGRAM_CHAT_ID` | Target chat/channel ID | - | ✅ |
-| `SCRAPER_TIMEOUT` | Request timeout (seconds) | 15 | ❌ |
-| `SCRAPER_MAX_RETRIES` | Max retry attempts | 3 | ❌ |
-| `USD_TO_VND_RATE` | Exchange rate for conversion | 24000 | ❌ |
-| `LOG_LEVEL` | Logging level | INFO | ❌ |
-
-### Sample .env File
-
-```bash
-# Telegram Configuration
-TELEGRAM_BOT_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
-TELEGRAM_CHAT_ID=-1001234567890
-
-# Scraper Settings
-SCRAPER_TIMEOUT=20
-SCRAPER_MAX_RETRIES=3
-USD_TO_VND_RATE=24500
-
-# Logging
-LOG_LEVEL=INFO
-```
-
-## 🤖 Usage Commands
-
-```bash
-# Show configuration
-python main.py config
-
-# Run system test
-python main.py test
-
-# Send test notification  
-python main.py notify-test
-
-# Run price update (main function)
-python main.py update
-
-# Show help
-python main.py help
-```
-
-## 📱 Telegram Message Format
-
-```
-☕ BÁO GIÁ CÀ PHÊ QUỐC TẾ
-📅 21/08/2025 15:30 (GMT+7)
-
-🌱 ROBUSTA (London)
-💰 Giá: $4,247.00/tấn
-💸 VND: 101,928,000/tấn
-📈 Thay đổi: +12.00 (+0.28%)
-
-☕ ARABICA (New York)  
-💰 Giá: 245.50 cents/lb
-💰 USD: $5,411.23/tấn
-💸 VND: 129,869,520/tấn
-📈 Thay đổi: -3.25 (-1.31%)
-
-✅ Tất cả dữ liệu cập nhật thành công
-
-🔗 Nguồn: Investing.com
-🤖 Tự động cập nhật bởi GiaNongSan Bot
-```
-
-## 🛡️ Error Handling
-
-### Fallback Strategies
-
-1. **Primary**: Standard requests with headers
-2. **Cloudflare Bypass**: Uses cloudscraper
-3. **JavaScript Rendering**: Selenium WebDriver (last resort)
-
-### Error Notifications
-
-- Automatic error alerts to Telegram
-- Detailed logging for debugging
-- GitHub Actions failure notifications
-
-## 📈 Monitoring & Logs
-
-### GitHub Actions
-
-- ✅ Successful runs logged in Actions tab
-- ❌ Failed runs upload logs as artifacts
-- 📊 Daily health check reports
-
-### Local Logs
-
-```bash
-# View recent logs
-tail -f coffee_tracker.log
-
-# Check specific errors
-grep ERROR coffee_tracker.log
-```
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Bot not sending messages:**
-```bash
-# Check bot token and chat ID
-python main.py config
-
-# Test connection
-python main.py test
-```
-
-**Scraping failures:**
-```bash
-# Check if sites are accessible
-curl -I https://www.investing.com/commodities/london-coffee
-
-# Test with fallback methods
-python test_scraper.py
-```
-
-**GitHub Actions not running:**
-- Check repository secrets are set
-- Verify workflow file is in `.github/workflows/`
-- Check Actions tab for error messages
-
-### Anti-Bot Protection
-
-If scraping is blocked:
-
-1. **Enable Cloudscraper** (automatic fallback)
-2. **Use rotating proxies** (manual setup required)
-3. **Switch to Selenium** (slower but more reliable)
-
-## 🌟 Advanced Features
-
-### Custom Scheduling
-
-Modify `.github/workflows/coffee_tracker.yml`:
-
-```yaml
-schedule:
-  - cron: '0 1 * * *'    # 8AM Vietnam
-  - cron: '0 6 * * *'    # 1PM Vietnam  
-  - cron: '0 10 * * *'   # 5PM Vietnam
-```
-
-### Additional Markets
-
-Extend `config.py` to add more coffee sources:
-
-```python
-'vietnam_domestic': {
-    'url': 'https://example-vietnam-coffee-site.com',
-    'name': 'Vietnam Domestic Coffee',
-    'unit': 'VND/kg',
-    'symbol': 'VN-CF'
-}
-```
-
-### Price Alerts
-
-Add threshold monitoring in `telegram_bot.py`:
-
-```python
-def check_price_alerts(self, price_data):
-    # Alert if price changes > 5%
-    # Alert if price reaches certain thresholds
-    pass
-```
-
-## 📄 License
-
-MIT License - Feel free to use for commercial or personal projects.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/new-market`)
-3. Commit changes (`git commit -am 'Add new market source'`)
-4. Push to branch (`git push origin feature/new-market`)
-5. Create Pull Request
-
-## 📞 Support
-
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-- 📧 **Email**: your-email@example.com
-
----
-
-**Made with ☕ for the Vietnamese coffee community**# coffee-price
+MIT License.
