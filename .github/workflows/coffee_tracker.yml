@@ -2,9 +2,9 @@ name: Coffee Price Tracker
 
 on:
   schedule:
-    # 8AM and 5PM Vietnam time (UTC+7)
-    - cron: '0 1 * * *'
-    - cron: '0 10 * * *'
+    # 9AM and 3PM Vietnam time (UTC+7) -> 2AM and 8AM UTC
+    - cron: '0 2 * * *'
+    - cron: '0 8 * * *'
   
   workflow_dispatch:
     inputs:

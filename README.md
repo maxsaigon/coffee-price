@@ -7,7 +7,7 @@ Automated coffee bean price scraping from international and Vietnamese domestic 
 - **International Prices**: Arabica (NYC) & Robusta (London) via Yahoo Finance (`yfinance`).
 - **Domestic Prices**: Real-time prices from **Chocaphe.vn** (Dak Lak, Lam Dong, Gia Lai, Dak Nong).
 - **Telegram Notifications**: Daily reports with price changes and trends.
-- **GitHub Actions**: Automated scheduling (8AM & 5PM Vietnam time).
+- **GitHub Actions**: Automated scheduling (9AM & 3PM Vietnam time).
 - **Reliability**: Parallel scraping, retry logic, and fallback strategies.
 
 ## 📊 Data Sources
@@ -64,8 +64,8 @@ The project includes a pre-configured workflow `.github/workflows/coffee_tracker
    - `TELEGRAM_CHAT_ID`: Your target chat ID.
 
 ### Schedule:
-- **Morning Update**: 08:00 AM (Vietnam Time)
-- **Evening Update**: 17:00 PM (Vietnam Time)
+- **Morning Update**: 09:00 AM (Vietnam Time)
+- **Afternoon Update**: 15:00 PM (Vietnam Time)
 
 ## 📁 Project Structure
 
