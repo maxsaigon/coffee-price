@@ -1,13 +1,11 @@
 name: Coffee Price Tracker
 
 on:
-  # Scheduled runs at 8AM and 5PM Vietnam time (UTC+7)
-  # 8AM Vietnam = 1AM UTC, 5PM Vietnam = 10AM UTC
   schedule:
-    - cron: '0 1 * * *'   # 8AM Vietnam time (1AM UTC)
-    - cron: '0 10 * * *'  # 5PM Vietnam time (10AM UTC)
+    # 8AM and 5PM Vietnam time (UTC+7)
+    - cron: '0 1 * * *'
+    - cron: '0 10 * * *'
   
-  # Allow manual trigger
   workflow_dispatch:
     inputs:
       command:
@@ -18,8 +16,6 @@ on:
         options:
         - update
         - test
-        - quick-test
-        - notify-test
 
 jobs:
   coffee-price-update:
@@ -37,7 +33,6 @@ jobs:
     
     - name: Install dependencies
       run: |
-        
         pip install --upgrade pip
         pip install -r requirements.txt
     
@@ -45,101 +40,6 @@ jobs:
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        SCRAPER_TIMEOUT: '20'
-        SCRAPER_MAX_RETRIES: '3'
-        USD_TO_VND_RATE: '25000'
         LOG_LEVEL: 'INFO'
       run: |
-        # Run the enhanced multi-source coffee tracker
-        python main.py ${{ github.event.inputs.command || 'update' }}
-        
-        # Show some basic status info
-        echo "=== Execution completed ==="
-        echo "Command: ${{ github.event.inputs.command || 'update' }}"
-        echo "Exit Code: $?"
-        echo "Time: $(TZ='Asia/Ho_Chi_Minh' date)"
-        if [ -f coffee_tracker.log ]; then
-          echo "Log file size: $(wc -l < coffee_tracker.log) lines"
-          echo "Last 5 log entries:"
-          tail -5 coffee_tracker.log
-        fi
-    
-    - name: Upload logs on failure
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: coffee-tracker-logs
-        path: coffee_tracker.log
-        retention-days: 7
-
-  # Health check job (runs once daily)
-  health-check:
-    runs-on: ubuntu-latest
-    if: github.event.schedule == '0 1 * * *'  # Only run with morning schedule
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-        cache: 'pip'
-    
-    - name: Install dependencies
-      run: |
-        
-        pip install --upgrade pip
-        pip install -r requirements.txt
-    
-    - name: Run system health check
-      env:
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      run: |
-        # Run comprehensive system test using main.py
-        python main.py test
-    
-    - name: Create health check report
-      if: always()
-      run: |
-        echo "## Coffee Tracker Health Check Report" > health_report.md
-        echo "**Date:** $(date)" >> health_report.md
-        echo "**Status:** ${{ job.status }}" >> health_report.md
-        echo "**Vietnam Time:** $(TZ='Asia/Ho_Chi_Minh' date)" >> health_report.md
-        echo "" >> health_report.md
-        
-        # Add test results summary
-        echo "**Health Check Results:**" >> health_report.md
-        if [ "${{ job.status }}" = "success" ]; then
-          echo "✅ All health checks passed" >> health_report.md
-        else
-          echo "❌ Some health checks failed" >> health_report.md
-        fi
-        echo "" >> health_report.md
-        
-        # Add recent logs if available
-        if [ -f coffee_tracker.log ]; then
-          echo "**Recent Logs:**" >> health_report.md
-          echo '```' >> health_report.md
-          tail -30 coffee_tracker.log >> health_report.md
-          echo '```' >> health_report.md
-        else
-          echo "**Log Status:** No log file found" >> health_report.md
-        fi
-        
-        # Add system info
-        echo "" >> health_report.md
-        echo "**System Information:**" >> health_report.md
-        echo "- Python Version: $(python --version)" >> health_report.md
-        echo "- Working Directory: $(pwd)" >> health_report.md
-        echo "- Available Files: $(ls -la | head -10)" >> health_report.md
-    
-    - name: Upload health report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: health-check-report
-        path: health_report.md
-        retention-days: 30
+        python src/main.py ${{ github.event.inputs.command || 'update' }}
