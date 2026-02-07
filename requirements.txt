@@ -3,7 +3,7 @@ requests==2.31.0
 beautifulsoup4==4.12.2
 lxml==4.9.3
 python-dateutil==2.8.2
-# yfinance==0.2.36 # Removed
+yfinance==0.2.36
 
 # Telegram bot
 aiohttp==3.9.1

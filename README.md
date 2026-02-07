@@ -5,6 +5,7 @@ Automated coffee bean price scraping from international and Vietnamese domestic 
 ## 🎯 Features
 
 - **International Prices**: Arabica (NYC) & Robusta (London) via **Chocaphe.vn**.
+- **Market Financials**: Gold Futures & USD/VND Exchange Rate via **Yahoo Finance**.
 - **Domestic Prices**: Real-time prices from **Chocaphe.vn** (Dak Lak, Lam Dong, Gia Lai, Dak Nong).
 - **Telegram Notifications**: Daily reports with price changes and trends.
 - **GitHub Actions**: Automated scheduling (9AM & 3PM Vietnam time).
@@ -15,6 +16,7 @@ Automated coffee bean price scraping from international and Vietnamese domestic 
 | Market | Source | Update Freq | Status |
 |--------|--------|-------------|--------|
 | **International** | Chocaphe.vn (Intl) | Real-time (Price only) | ✅ Active |
+| **Financials** | Yahoo Finance (VND=X, GC=F) | ~10 mins delayed | ✅ Active |
 | **Domestic** | Chocaphe.vn (Domestic) | Real-time | ✅ Active |
 
 ## 🚀 Quick Start
@@ -75,7 +77,8 @@ gianongsan/
 │   ├── main.py                # Entry point
 │   ├── config.py              # Configuration
 │   ├── providers/             # Data Fetchers
-│   │   └── chocaphe_scraper.py# Chocaphe.vn (Intl & Domestic)
+│   │   ├── chocaphe_scraper.py# Chocaphe.vn (Intl & Domestic)
+│   │   └── financial_provider.py # Yahoo Finance (Gold/USD)
 │   └── services/              # Notification Services
 ├── .github/workflows/         # Automation workflows
 ├── requirements.txt           # Dependencies

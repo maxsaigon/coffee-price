@@ -5,6 +5,7 @@ from datetime import datetime
 from src.config import Config
 # from src.providers.yfinance_client import YFinanceProvider # Removed
 from src.providers.chocaphe_scraper import ChocapheScraper, ChocapheIntlScraper
+from src.providers.financial_provider import FinancialProvider
 from src.services.telegram_bot import TelegramService
 
 # Setup Logging
@@ -17,7 +18,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def format_telegram_message(international_data, domestic_data):
+def format_telegram_message(international_data, domestic_data, financial_data):
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     message = f"☕ *CẬP NHẬT GIÁ CAFE*\n"
     message += f"📅 _Thời gian: {now}_\n\n"
@@ -35,10 +36,7 @@ def format_telegram_message(international_data, domestic_data):
                 
                 message += f"▪️ *{name}*\n"
                 message += f"   💰 Giá: `{price:,.2f}`\n"
-                # Only show open/change if we have meaningful data (change != 0 or open != 0)
-                # Since scraper returns 0 for now, we might want to hide it or keep it simple
-                # Keeping it simple for now, but maybe suppressing 0.00 is better?
-                # For Chocaphe Intl, open/change is 0.
+
                 if change != 0:
                      message += f"   🌅 Mở cửa: `{open_price:,.2f}`\n"
                      message += f"   {icon} Thay đổi: `{change:+.2f}` (`{percent:+.2f}%`)\n"
@@ -49,6 +47,31 @@ def format_telegram_message(international_data, domestic_data):
         
     message += "\n"
     
+    # Financial Section
+    if financial_data:
+        message += "💰 *TÀI CHÍNH & TỶ GIÁ*\n"
+        for name, data in financial_data.items():
+            if data.get('success'):
+                price = data['price']
+                change = data['change']
+                percent = data['change_percent']
+                unit = data['currency']
+                icon = "📈" if change >= 0 else "📉"
+                
+                # Format: Gold (World): 2030.50 USD/oz (+10.5)
+                # Format: USD/VND: 24500 VND (+50)
+                if 'VND' in unit:
+                    # Integer format for VND
+                    message += f"▪️ *{name}*: `{price:,.0f} {unit}`"
+                else:
+                    # Float format for Gold
+                    message += f"▪️ *{name}*: `{price:,.2f} {unit}`"
+                    
+                if change != 0:
+                    message += f"\n   {icon} Thay đổi: `{change:+.2f}` (`{percent:+.2f}%`)"
+                message += "\n"
+        message += "\n"
+        
     # Domestic Section
     message += "🇻🇳 *THỊ TRƯỜNG VIỆT NAM* (VND/kg)\n"
     if domestic_data:
@@ -77,7 +100,6 @@ def run_update(send_telegram=True):
     logger.info("Starting price update...")
     
     # 1. Fetch International Prices
-    # Replace yfinance with Chocaphe Intl
     yf_provider = ChocapheIntlScraper()
     international_data = yf_provider.get_prices()
     
@@ -85,15 +107,19 @@ def run_update(send_telegram=True):
     dom_provider = ChocapheScraper()
     domestic_data = dom_provider.get_prices()
     
-    # 3. Format Message
-    message = format_telegram_message(international_data, domestic_data)
+    # 3. Fetch Financial Data
+    fin_provider = FinancialProvider()
+    financial_data = fin_provider.get_prices()
     
-    # 4. Print Preview
+    # 4. Format Message
+    message = format_telegram_message(international_data, domestic_data, financial_data)
+    
+    # 5. Print Preview
     print("\n--- PREVIEW ---")
     print(message)
     print("---------------\n")
     
-    # 5. Send Telegram
+    # 6. Send Telegram
     if send_telegram:
         bot = TelegramService()
         bot.send_message(message)
