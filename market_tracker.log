@@ -116,3 +116,99 @@
 2025-08-26 09:27:46,344 - INFO - Message sent successfully to Telegram
 2025-08-26 09:27:46,345 - INFO - ✅ Test notification sent
 2025-08-26 09:27:46,345 - INFO - 🎉 Operation completed successfully
+2026-02-07 13:44:46,327 - INFO - Starting comprehensive coffee market scraping...
+2026-02-07 13:44:46,328 - INFO - Scraping robusta from Robusta Coffee...
+2026-02-07 13:44:46,328 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2026-02-07 13:44:48,038 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee (144008 chars)
+2026-02-07 13:44:48,056 - ERROR - No current price found for robusta
+2026-02-07 13:44:48,056 - WARNING - ❌ Failed to scrape robusta
+2026-02-07 13:44:48,057 - INFO - Scraping arabica from Arabica Coffee...
+2026-02-07 13:44:48,057 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2026-02-07 13:44:48,917 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c (143677 chars)
+2026-02-07 13:44:49,187 - ERROR - No current price found for arabica
+2026-02-07 13:44:49,187 - WARNING - ❌ Failed to scrape arabica
+2026-02-07 13:44:49,187 - INFO - Scraping completed: 0/2 successful
+2026-02-07 13:45:17,784 - INFO - Starting comprehensive coffee market scraping...
+2026-02-07 13:45:17,784 - INFO - Scraping robusta from Robusta Coffee...
+2026-02-07 13:45:17,785 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2026-02-07 13:45:19,197 - INFO - Successfully fetched https://www.investing.com/commodities/london-coffee (144453 chars)
+2026-02-07 13:45:19,220 - ERROR - No current price found for robusta
+2026-02-07 13:45:19,222 - WARNING - ❌ Failed to scrape robusta
+2026-02-07 13:45:19,222 - INFO - Scraping arabica from Arabica Coffee...
+2026-02-07 13:45:19,222 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2026-02-07 13:45:19,551 - INFO - Successfully fetched https://www.investing.com/commodities/us-coffee-c (143730 chars)
+2026-02-07 13:45:19,723 - ERROR - No current price found for arabica
+2026-02-07 13:45:19,728 - WARNING - ❌ Failed to scrape arabica
+2026-02-07 13:45:19,728 - INFO - Scraping completed: 0/2 successful
+2026-02-07 13:46:10,072 - INFO - Starting comprehensive coffee market scraping...
+2026-02-07 13:46:10,074 - INFO - Scraping robusta from Robusta Coffee...
+2026-02-07 13:46:10,074 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2026-02-07 13:46:10,800 - WARNING - Detected anti-bot protection
+2026-02-07 13:46:10,800 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/3)
+2026-02-07 13:46:13,192 - WARNING - Detected anti-bot protection
+2026-02-07 13:46:13,192 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 3/3)
+2026-02-07 13:46:17,898 - WARNING - Detected anti-bot protection
+2026-02-07 13:46:17,899 - ERROR - All attempts failed for https://www.investing.com/commodities/london-coffee
+2026-02-07 13:46:17,900 - INFO - Scraping arabica from Arabica Coffee...
+2026-02-07 13:46:17,900 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2026-02-07 13:46:18,239 - WARNING - Detected anti-bot protection
+2026-02-07 13:46:18,239 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 2/3)
+2026-02-07 13:46:21,545 - WARNING - Detected anti-bot protection
+2026-02-07 13:46:21,545 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 3/3)
+2026-02-07 13:46:26,417 - WARNING - Detected anti-bot protection
+2026-02-07 13:46:26,417 - ERROR - All attempts failed for https://www.investing.com/commodities/us-coffee-c
+2026-02-07 13:46:26,418 - INFO - Scraping completed: 0/2 successful
+2026-02-07 13:47:19,110 - INFO - Starting comprehensive coffee market scraping...
+2026-02-07 13:47:19,117 - INFO - Scraping robusta from Robusta Coffee...
+2026-02-07 13:47:19,117 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2026-02-07 13:47:20,549 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:20,549 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/3)
+2026-02-07 13:47:25,075 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:25,077 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 3/3)
+2026-02-07 13:47:29,854 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:29,854 - ERROR - All attempts failed for https://www.investing.com/commodities/london-coffee
+2026-02-07 13:47:29,855 - INFO - Scraping arabica from Arabica Coffee...
+2026-02-07 13:47:29,855 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2026-02-07 13:47:30,630 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:30,631 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 2/3)
+2026-02-07 13:47:33,108 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:33,109 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 3/3)
+2026-02-07 13:47:38,370 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:38,371 - ERROR - All attempts failed for https://www.investing.com/commodities/us-coffee-c
+2026-02-07 13:47:38,372 - INFO - Scraping completed: 0/2 successful
+2026-02-07 13:47:43,392 - INFO - Starting comprehensive coffee market scraping...
+2026-02-07 13:47:43,393 - INFO - Scraping robusta from Robusta Coffee...
+2026-02-07 13:47:43,394 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2026-02-07 13:47:44,042 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:44,042 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/3)
+2026-02-07 13:47:46,956 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:46,957 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 3/3)
+2026-02-07 13:47:51,817 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:51,817 - ERROR - All attempts failed for https://www.investing.com/commodities/london-coffee
+2026-02-07 13:47:51,818 - INFO - Scraping arabica from Arabica Coffee...
+2026-02-07 13:47:51,818 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2026-02-07 13:47:52,146 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:52,147 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 2/3)
+2026-02-07 13:47:54,598 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:54,601 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 3/3)
+2026-02-07 13:47:59,399 - WARNING - Detected anti-bot protection
+2026-02-07 13:47:59,400 - ERROR - All attempts failed for https://www.investing.com/commodities/us-coffee-c
+2026-02-07 13:47:59,400 - INFO - Scraping completed: 0/2 successful
+2026-02-07 13:48:04,471 - INFO - Starting comprehensive coffee market scraping...
+2026-02-07 13:48:04,472 - INFO - Scraping robusta from Robusta Coffee...
+2026-02-07 13:48:04,472 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 1/3)
+2026-02-07 13:48:05,387 - WARNING - Detected anti-bot protection
+2026-02-07 13:48:05,388 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 2/3)
+2026-02-07 13:48:09,255 - WARNING - Detected anti-bot protection
+2026-02-07 13:48:09,256 - INFO - Fetching https://www.investing.com/commodities/london-coffee (attempt 3/3)
+2026-02-07 13:48:14,322 - WARNING - Detected anti-bot protection
+2026-02-07 13:48:14,323 - ERROR - All attempts failed for https://www.investing.com/commodities/london-coffee
+2026-02-07 13:48:14,323 - INFO - Scraping arabica from Arabica Coffee...
+2026-02-07 13:48:14,324 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 1/3)
+2026-02-07 13:48:14,614 - WARNING - Detected anti-bot protection
+2026-02-07 13:48:14,614 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 2/3)
+2026-02-07 13:48:17,070 - WARNING - Detected anti-bot protection
+2026-02-07 13:48:17,071 - INFO - Fetching https://www.investing.com/commodities/us-coffee-c (attempt 3/3)
+2026-02-07 13:48:21,540 - WARNING - Detected anti-bot protection
+2026-02-07 13:48:21,540 - ERROR - All attempts failed for https://www.investing.com/commodities/us-coffee-c
+2026-02-07 13:48:21,540 - INFO - Scraping completed: 0/2 successful

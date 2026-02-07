@@ -18,6 +18,7 @@ import pytz
 import schedule
 import threading
 from dataclasses import dataclass
+import cloudscraper
 
 # Configure logging
 logging.basicConfig(
@@ -56,7 +57,8 @@ class InvestingMarketScraper:
     """
     
     def __init__(self):
-        self.session = requests.Session()
+        # Use cloudscraper to bypass anti-bot protection
+        self.session = cloudscraper.create_scraper()
         self.setup_session()
         
         # Coffee markets and their hours
@@ -156,28 +158,22 @@ class InvestingMarketScraper:
         }
         
     def setup_session(self):
-        """Configure session with rotating user agents"""
-        user_agents = [
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        ]
-        
-        import random
-        self.session.headers.update({
-            'User-Agent': random.choice(user_agents),
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Cache-Control': 'max-age=0',
-            'Referer': 'https://www.google.com/'
-        })
+        """Configure session headers (minimal to avoid interfering with cloudscraper)"""
+        # Rely on cloudscraper defaults
+        pass
+        # self.session.headers.update({
+        #     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        #     'Accept-Language': 'en-US,en;q=0.5',
+        #     'Accept-Encoding': 'gzip, deflate',
+        #     'DNT': '1',
+        #     'Connection': 'keep-alive',
+        #     'Upgrade-Insecure-Requests': '1',
+        #     'Sec-Fetch-Dest': 'document',
+        #     'Sec-Fetch-Mode': 'navigate',
+        #     'Sec-Fetch-Site': 'none',
+        #     'Cache-Control': 'max-age=0',
+        #     'Referer': 'https://www.google.com/'
+        # })
 
     def get_market_status(self, coffee_type: str) -> str:
         """Determine if market is open, closed, or in pre/after hours"""
@@ -300,6 +296,8 @@ class InvestingMarketScraper:
             # Validate that we got at least current price
             if 'current_price' not in data:
                 logger.error(f"No current price found for {coffee_type}")
+                with open(f"debug_{coffee_type}.html", "w", encoding="utf-8") as f:
+                    f.write(html)
                 return None
             
             logger.info(f"Successfully parsed {coffee_type}: {data.get('current_price', 'N/A')}")
@@ -307,6 +305,10 @@ class InvestingMarketScraper:
             
         except Exception as e:
             logger.error(f"Error parsing {coffee_type}: {e}")
+            # Save HTML for debugging
+            with open(f"debug_{coffee_type}.html", "w", encoding="utf-8") as f:
+                f.write(html)
+            logger.info(f"Saved debug HTML to debug_{coffee_type}.html")
             return None
 
     def extract_price_value(self, soup: BeautifulSoup, price_type: str) -> Optional[float]:

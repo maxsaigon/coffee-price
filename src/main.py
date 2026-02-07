@@ -3,8 +3,8 @@ import argparse
 import logging
 from datetime import datetime
 from src.config import Config
-from src.providers.yfinance_client import YFinanceProvider
-from src.providers.chocaphe_scraper import ChocapheScraper
+# from src.providers.yfinance_client import YFinanceProvider # Removed
+from src.providers.chocaphe_scraper import ChocapheScraper, ChocapheIntlScraper
 from src.services.telegram_bot import TelegramService
 
 # Setup Logging
@@ -35,8 +35,13 @@ def format_telegram_message(international_data, domestic_data):
                 
                 message += f"▪️ *{name}*\n"
                 message += f"   💰 Giá: `{price:,.2f}`\n"
-                message += f"   🌅 Mở cửa: `{open_price:,.2f}`\n"
-                message += f"   {icon} Thay đổi: `{change:+.2f}` (`{percent:+.2f}%`)\n"
+                # Only show open/change if we have meaningful data (change != 0 or open != 0)
+                # Since scraper returns 0 for now, we might want to hide it or keep it simple
+                # Keeping it simple for now, but maybe suppressing 0.00 is better?
+                # For Chocaphe Intl, open/change is 0.
+                if change != 0:
+                     message += f"   🌅 Mở cửa: `{open_price:,.2f}`\n"
+                     message += f"   {icon} Thay đổi: `{change:+.2f}` (`{percent:+.2f}%`)\n"
             else:
                 message += f"▪️ *{name}*: ⚠️ N/A\n"
     else:
@@ -72,7 +77,8 @@ def run_update(send_telegram=True):
     logger.info("Starting price update...")
     
     # 1. Fetch International Prices
-    yf_provider = YFinanceProvider()
+    # Replace yfinance with Chocaphe Intl
+    yf_provider = ChocapheIntlScraper()
     international_data = yf_provider.get_prices()
     
     # 2. Fetch Domestic Prices

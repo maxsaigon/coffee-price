@@ -115,3 +115,88 @@ class ChocapheScraper(BaseProvider):
         except Exception as e:
             logger.error(f"Error fetching {name}: {e}")
             return None
+
+class ChocapheIntlScraper(BaseProvider):
+    """
+    Scraper for International coffee prices from Chocaphe.vn.
+    Source: https://chocaphe.vn/gia-ca-phe-truc-tuyen.cfp
+    """
+    URL = "https://chocaphe.vn/gia-ca-phe-truc-tuyen.cfp"
+
+    def __init__(self, config=None):
+        self.config = config
+
+    @property
+    def source_name(self) -> str:
+        return "Chocaphe.vn (Intl)"
+
+    def get_prices(self) -> Dict[str, Any]:
+        results = {}
+        try:
+            # Use requests to fetch the page
+            scraper_session = requests.Session()
+            # Mimic browser to avoid potential blocking (though curl worked fine)
+            scraper_session.headers.update({
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            })
+            
+            response = scraper_session.get(self.URL, timeout=15)
+            response.encoding = 'utf-8'
+            
+            if response.status_code != 200:
+                logger.error(f"Failed to fetch Intl prices: Status {response.status_code}")
+                return results
+
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            # Combine Title and Description for searching
+            text_sources = []
+            if soup.title:
+                text_sources.append(soup.title.get_text())
+            
+            meta = soup.find('meta', {'name': 'description'})
+            if meta:
+                text_sources.append(meta.get('content', ''))
+                
+            full_text = " ".join(text_sources).lower()
+            
+            # --- Robusta ---
+            # Pattern: robusta ... 3,755 ... usd/tấn
+            # Regex needs to be flexible for spaces/text in between
+            # "robusta 3,755 usd/tấn"
+            robusta_match = re.search(r'robusta.*?(\d+(?:,\d+)*(?:\.\d+)?)\s*usd/tấn', full_text)
+            if robusta_match:
+                price_str = robusta_match.group(1).replace(',', '') # Remove comma thousands separator
+                try:
+                    price = float(price_str)
+                    results['Robusta (London)'] = {
+                        'price': price,
+                        'change': 0, # Not parsed
+                        'change_percent': 0,
+                        'currency': 'USD/Ton',
+                        'success': True
+                    }
+                except ValueError:
+                    logger.warning(f"Could not parse Robusta price: {price_str}")
+                
+            # --- Arabica ---
+            # Pattern: arabica ... 296.55 ... cent/lb
+            arabica_match = re.search(r'arabica.*?(\d+(?:,\d+)*(?:\.\d+)?)\s*cent/lb', full_text)
+            if arabica_match:
+                price_str = arabica_match.group(1).replace(',', '')
+                try:
+                    price = float(price_str)
+                    results['Arabica (US)'] = {
+                        'price': price,
+                        'change': 0,
+                        'change_percent': 0,
+                        'currency': 'Cent/lb',
+                        'success': True
+                    }
+                except ValueError:
+                    logger.warning(f"Could not parse Arabica price: {price_str}")
+
+        except Exception as e:
+            logger.error(f"Error scraping intl prices: {e}")
+            
+        return results
