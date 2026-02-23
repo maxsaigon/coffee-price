@@ -1,143 +1,144 @@
+"""
+Coffee Price Tracker — main entry point.
+
+Usage:
+    python -m src.main update    # Scrape prices and send Telegram notification
+    python -m src.main test      # Dry-run (print only, no Telegram)
+"""
+
 import sys
 import argparse
 import logging
 from datetime import datetime
+
 from src.config import Config
-# from src.providers.yfinance_client import YFinanceProvider # Removed
 from src.providers.chocaphe_scraper import ChocapheScraper, ChocapheIntlScraper
 from src.providers.financial_provider import FinancialProvider
 from src.services.telegram_bot import TelegramService
+from src.services.formatter import MessageFormatter
 
-# Setup Logging
+# ---------------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------------
+
 logging.basicConfig(
-    level=getattr(logging, Config.LOG_LEVEL.upper()),
+    level=getattr(logging, Config.LOG_LEVEL.upper(), logging.INFO),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
+    handlers=[logging.StreamHandler(sys.stdout)],
 )
 logger = logging.getLogger(__name__)
 
-def format_telegram_message(international_data, domestic_data, financial_data):
-    now = datetime.now().strftime("%d/%m/%Y %H:%M")
-    message = f"☕ *CẬP NHẬT GIÁ CAFE*\n"
-    message += f"📅 _Thời gian: {now}_\n\n"
-    
-    # International Section
-    message += "🌍 *THỊ TRƯỜNG QUỐC TẾ*\n"
-    if international_data:
-        for name, data in international_data.items():
-            if data.get('success'):
-                price = data['price']
-                open_price = data.get('open', 0)
-                change = data['change']
-                percent = data['change_percent']
-                icon = "📈" if change >= 0 else "📉"
-                
-                message += f"▪️ *{name}*\n"
-                message += f"   💰 Giá: `{price:,.2f}`\n"
+# ---------------------------------------------------------------------------
+# Core logic
+# ---------------------------------------------------------------------------
 
-                if change != 0:
-                     message += f"   🌅 Mở cửa: `{open_price:,.2f}`\n"
-                     message += f"   {icon} Thay đổi: `{change:+.2f}` (`{percent:+.2f}%`)\n"
-            else:
-                message += f"▪️ *{name}*: ⚠️ N/A\n"
-    else:
-        message += "⚠️ Không có dữ liệu quốc tế\n"
-        
-    message += "\n"
-    
-    # Financial Section
-    if financial_data:
-        message += "💰 *TÀI CHÍNH & TỶ GIÁ*\n"
-        for name, data in financial_data.items():
-            if data.get('success'):
-                price = data['price']
-                change = data['change']
-                percent = data['change_percent']
-                unit = data['currency']
-                icon = "📈" if change >= 0 else "📉"
-                
-                # Format: Gold (World): 2030.50 USD/oz (+10.5)
-                # Format: USD/VND: 24500 VND (+50)
-                if 'VND' in unit:
-                    # Integer format for VND
-                    message += f"▪️ *{name}*: `{price:,.0f} {unit}`"
-                else:
-                    # Float format for Gold
-                    message += f"▪️ *{name}*: `{price:,.2f} {unit}`"
-                    
-                if change != 0:
-                    message += f"\n   {icon} Thay đổi: `{change:+.2f}` (`{percent:+.2f}%`)"
-                message += "\n"
-        message += "\n"
-        
-    # Domestic Section
-    message += "🇻🇳 *THỊ TRƯỜNG VIỆT NAM* (VND/kg)\n"
-    if domestic_data:
-        # Sort locations to ensure consistent order
-        defined_order = ['Đắk Lắk', 'Lâm Đồng', 'Gia Lai', 'Đắk Nông']
-        locations = sorted(domestic_data.keys(), key=lambda x: defined_order.index(x) if x in defined_order else 99)
-        
-        for location in locations:
-            data = domestic_data[location]
-            if data.get('success'):
-                price = data['price']
-                change = data['change']
-                icon = "📈" if change > 0 else "📉" if change < 0 else "➖"
-                
-                # Format: Dak Lak: 80,500 (+200)
-                message += f"▪️ *{location}*: `{price:,.0f}`"
-                if change != 0:
-                    message += f" ({icon} `{change:+,.0f}`)"
-                message += "\n"
-    else:
-        message += "⚠️ Không có dữ liệu trong nước\n"
+def _fetch_all_data():
+    """Fetch data from every provider.  Returns three dicts (or None)."""
 
-    return message
+    logger.info("Fetching international prices…")
+    try:
+        international_data = ChocapheIntlScraper().get_prices() or None
+    except Exception as exc:
+        logger.error("International scraper failed: %s", exc)
+        international_data = None
 
-def run_update(send_telegram=True):
-    logger.info("Starting price update...")
-    
-    # 1. Fetch International Prices
-    yf_provider = ChocapheIntlScraper()
-    international_data = yf_provider.get_prices()
-    
-    # 2. Fetch Domestic Prices
-    dom_provider = ChocapheScraper()
-    domestic_data = dom_provider.get_prices()
-    
-    # 3. Fetch Financial Data
-    fin_provider = FinancialProvider()
-    financial_data = fin_provider.get_prices()
-    
-    # 4. Format Message
-    message = format_telegram_message(international_data, domestic_data, financial_data)
-    
-    # 5. Print Preview
+    logger.info("Fetching domestic prices…")
+    try:
+        domestic_data = ChocapheScraper().get_prices() or None
+    except Exception as exc:
+        logger.error("Domestic scraper failed: %s", exc)
+        domestic_data = None
+
+    logger.info("Fetching financial data…")
+    try:
+        financial_data = FinancialProvider().get_prices() or None
+    except Exception as exc:
+        logger.error("Financial provider failed: %s", exc)
+        financial_data = None
+
+    return international_data, domestic_data, financial_data
+
+
+def run_update(*, send_telegram: bool = True) -> bool:
+    """Run a full price update cycle.
+
+    Returns True if data was scraped (and optionally sent) successfully.
+    """
+    start = datetime.now()
+    logger.info("=" * 50)
+    logger.info("Starting price update at %s", start.isoformat())
+
+    international_data, domestic_data, financial_data = _fetch_all_data()
+
+    # Check that we have at least *some* data
+    has_any_data = any([international_data, domestic_data, financial_data])
+    if not has_any_data:
+        logger.error("All providers returned no data — aborting")
+        if send_telegram:
+            _send_error_alert("Tất cả nguồn dữ liệu đều thất bại. Vui lòng kiểm tra hệ thống.")
+        return False
+
+    # Format message
+    message = MessageFormatter.format_full_report(
+        international_data, domestic_data, financial_data,
+    )
+
+    # Preview
     print("\n--- PREVIEW ---")
     print(message)
     print("---------------\n")
-    
-    # 6. Send Telegram
+
+    # Send
     if send_telegram:
         bot = TelegramService()
-        bot.send_message(message)
+        if not bot.send_message(message):
+            logger.error("Failed to send Telegram message")
+            return False
+
+    elapsed = (datetime.now() - start).total_seconds()
+    logger.info("Price update completed in %.1fs", elapsed)
+    return True
+
+
+def _send_error_alert(detail: str) -> None:
+    """Best-effort error notification via Telegram."""
+    try:
+        now = datetime.now().strftime("%d/%m/%Y %H:%M")
+        alert = (
+            f"🚨 *LỖI HỆ THỐNG*\n"
+            f"📅 {now}\n\n"
+            f"{detail}\n\n"
+            f"🤖 GiaNongSan Bot"
+        )
+        TelegramService().send_message(alert)
+    except Exception as exc:
+        logger.error("Could not send error alert: %s", exc)
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description="Coffee Price Tracker")
-    parser.add_argument('command', choices=['update', 'test'], default='update', nargs='?')
+    parser.add_argument(
+        'command',
+        choices=['update', 'test'],
+        default='update',
+        nargs='?',
+    )
     args = parser.parse_args()
-    
-    # Validate Config
+
     if not Config.validate():
         sys.exit(1)
-        
+
     if args.command == 'test':
-        # Run without sending to Telegram
-        run_update(send_telegram=False)
+        success = run_update(send_telegram=False)
     else:
-        run_update(send_telegram=True)
+        success = run_update(send_telegram=True)
+
+    sys.exit(0 if success else 1)
+
 
 if __name__ == "__main__":
     main()

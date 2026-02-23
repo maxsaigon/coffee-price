@@ -1,5 +1,26 @@
-test_env/
+# Python
 __pycache__/
 *.pyc
-*.log
+*.pyo
+
+# Environment
 .env
+test_env/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs and debug output
+*.log
+debug_*.html
+
+# Test results
+test_result_*.json
+test_results_*.json
+
+# OS
+.DS_Store
+
+# Database (local only)
+*.db
