@@ -14,6 +14,11 @@ def _icon(change: float) -> str:
     return "–"
 
 
+def _millions(value: float) -> str:
+    """Format VND value (raw dong) as triệu (millions) with 1 decimal."""
+    return f"{value / 1_000_000:,.1f}"
+
+
 class MessageFormatter:
     """Build compact Telegram messages from scraped price data."""
 
@@ -21,12 +26,12 @@ class MessageFormatter:
     def format_full_report(
         international_data: Optional[Dict[str, Any]],
         domestic_data: Optional[Dict[str, Any]],
-        financial_data: Optional[Dict[str, Any]],
+        gold_data: Optional[Dict[str, Any]],
     ) -> str:
         now = datetime.now().strftime("%d/%m %H:%M")
         parts: List[str] = [f"☕ *CAFE* | {now}"]
 
-        # International
+        # International coffee
         if international_data:
             lines = ["", "🌍 *Quốc tế*"]
             for name, d in international_data.items():
@@ -44,26 +49,44 @@ class MessageFormatter:
                 lines.append(line)
             parts.extend(lines)
 
-        # Financial
-        if financial_data:
-            lines = ["", "💹 *Tài chính*"]
-            for name, d in financial_data.items():
-                if not d.get('success'):
-                    continue
-                p = d['price']
-                c = d['change']
-                pct = d['change_percent']
-                unit = d['currency']
-                if 'VND' in unit:
-                    line = f"{name} `{p:,.0f}`"
-                else:
-                    line = f"{name} `{p:,.2f}` {unit}"
-                if c != 0:
-                    line += f" {_icon(c)}`{pct:+.1f}%`"
-                lines.append(line)
-            parts.extend(lines)
+        # ----- Gold prices -----
+        if gold_data:
+            # Separate domestic gold from world gold
+            domestic_gold = {k: v for k, v in gold_data.items() if v.get('currency') == 'VND'}
+            world_gold = {k: v for k, v in gold_data.items() if v.get('currency') != 'VND'}
 
-        # Domestic
+            if domestic_gold:
+                lines = ["", "🪙 *Vàng trong nước* (triệu ₫)"]
+                for name, d in domestic_gold.items():
+                    if not d.get('success'):
+                        continue
+                    buy = d['buy']
+                    sell = d['sell']
+                    chg = d.get('change_sell', 0)
+                    line = f"{name}  M `{_millions(buy)}` | B `{_millions(sell)}`"
+                    if chg != 0:
+                        line += f" {_icon(chg)}`{chg / 1_000_000:+.1f}`"
+                    lines.append(line)
+                parts.extend(lines)
+
+            if world_gold:
+                lines = ["", "🌐 *Vàng thế giới*"]
+                for name, d in world_gold.items():
+                    if not d.get('success'):
+                        continue
+                    p = d['price']
+                    c = d.get('change', 0)
+                    unit = d['currency']
+                    line = f"{name} `{p:,.2f}` {unit}"
+                    if c != 0:
+                        pct = (c / (p - c)) * 100 if (p - c) != 0 else 0
+                        line += f" {_icon(c)}`{pct:+.1f}%`"
+                    lines.append(line)
+                parts.extend(lines)
+        elif gold_data is None:
+            parts.append("\n🪙 ⚠️ Vàng: N/A")
+
+        # Domestic coffee
         if domestic_data:
             parts.append("")
             parts.append("🇻🇳 *Việt Nam* ₫/kg")

@@ -13,7 +13,7 @@ from datetime import datetime
 
 from src.config import Config
 from src.providers.chocaphe_scraper import ChocapheScraper, ChocapheIntlScraper
-from src.providers.financial_provider import FinancialProvider
+from src.providers.financial_provider import GoldPriceProvider
 from src.services.telegram_bot import TelegramService
 from src.services.formatter import MessageFormatter
 
@@ -49,14 +49,14 @@ def _fetch_all_data():
         logger.error("Domestic scraper failed: %s", exc)
         domestic_data = None
 
-    logger.info("Fetching financial data…")
+    logger.info("Fetching gold prices…")
     try:
-        financial_data = FinancialProvider().get_prices() or None
+        gold_data = GoldPriceProvider().get_prices() or None
     except Exception as exc:
-        logger.error("Financial provider failed: %s", exc)
-        financial_data = None
+        logger.error("Gold price provider failed: %s", exc)
+        gold_data = None
 
-    return international_data, domestic_data, financial_data
+    return international_data, domestic_data, gold_data
 
 
 def run_update(*, send_telegram: bool = True) -> bool:
@@ -68,10 +68,10 @@ def run_update(*, send_telegram: bool = True) -> bool:
     logger.info("=" * 50)
     logger.info("Starting price update at %s", start.isoformat())
 
-    international_data, domestic_data, financial_data = _fetch_all_data()
+    international_data, domestic_data, gold_data = _fetch_all_data()
 
     # Check that we have at least *some* data
-    has_any_data = any([international_data, domestic_data, financial_data])
+    has_any_data = any([international_data, domestic_data, gold_data])
     if not has_any_data:
         logger.error("All providers returned no data — aborting")
         if send_telegram:
@@ -80,7 +80,7 @@ def run_update(*, send_telegram: bool = True) -> bool:
 
     # Format message
     message = MessageFormatter.format_full_report(
-        international_data, domestic_data, financial_data,
+        international_data, domestic_data, gold_data,
     )
 
     # Preview
