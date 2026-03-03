@@ -12,7 +12,7 @@ The Coffee Price Tracker for GiaNongSan has been successfully implemented with a
 - Robusta Coffee (London Commodity Exchange)
 - Arabica Coffee (Intercontinental Exchange, NYC)
 
-**Schedule**: 8AM & 5PM Vietnam time daily via GitHub Actions
+**Schedule**: 8AM & 3PM Vietnam time daily via GitHub Actions
 
 ### 🎯 Features Implemented
 
@@ -47,7 +47,7 @@ The Coffee Price Tracker for GiaNongSan has been successfully implemented with a
 
 #### ✅ Automation & Scheduling
 - **GitHub Actions**: `.github/workflows/coffee_tracker.yml`
-  - Scheduled runs at 8AM & 5PM Vietnam time
+  - Scheduled runs at 8AM & 3PM Vietnam time
   - Manual trigger capability
   - Failure handling and log artifacts
   - Health check monitoring
@@ -107,7 +107,7 @@ gianongsan/
 ### 🚀 Deployment Ready
 
 #### GitHub Actions Configuration
-- **Schedule**: Cron jobs for 8AM & 5PM Vietnam time
+- **Schedule**: Cron jobs for 8AM & 3PM Vietnam time
 - **Secrets**: Secure storage for bot tokens
 - **Monitoring**: Automatic health checks
 - **Logs**: Detailed error reporting and artifacts

@@ -12,7 +12,7 @@ The Coffee Price Tracker is **successfully operational** and ready for productio
    - Smart price validation and comparison across sources
 
 2. **✅ Telegram Bot Integration** - Fully functional
-   - Automatic daily reports at 8AM & 5PM Vietnam time
+   - Automatic daily reports at 8AM & 3PM Vietnam time
    - Test notifications working
    - Vietnamese language support
 
@@ -93,7 +93,7 @@ The system generates professional Vietnamese reports like:
 Your system is already properly configured:
 - ✅ Telegram Bot Token: Set
 - ✅ Chat ID: Set  
-- ✅ Scheduling: 8AM & 5PM Vietnam time
+- ✅ Scheduling: 8AM & 3PM Vietnam time
 - ✅ USD/VND Rate: 26,000
 - ✅ All scrapers optimized
 
