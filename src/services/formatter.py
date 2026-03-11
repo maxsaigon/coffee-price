@@ -29,67 +29,11 @@ class MessageFormatter:
         gold_data: Optional[Dict[str, Any]],
     ) -> str:
         now = datetime.now().strftime("%d/%m %H:%M")
-        parts: List[str] = [f"☕ *CAFE* | {now}"]
+        parts: List[str] = [f"☕ *Giá* {now}"]
 
-        # International coffee
-        if international_data:
-            lines = ["", "🌍 *Quốc tế*"]
-            for name, d in international_data.items():
-                if not d.get('success'):
-                    continue
-                p = d['price']
-                c = d['change']
-                pct = d['change_percent']
-                unit = d.get('currency', '')
-                # Short name
-                short = name.split('(')[0].strip()
-                line = f"{short} `{p:,.2f}` {unit}"
-                if c != 0:
-                    line += f" {_icon(c)}`{pct:+.1f}%`"
-                lines.append(line)
-            parts.extend(lines)
-
-        # ----- Gold prices -----
-        if gold_data:
-            # Separate domestic gold from world gold
-            domestic_gold = {k: v for k, v in gold_data.items() if v.get('currency') == 'VND'}
-            world_gold = {k: v for k, v in gold_data.items() if v.get('currency') != 'VND'}
-
-            if domestic_gold:
-                lines = ["", "🪙 *Vàng trong nước* (triệu ₫)"]
-                for name, d in domestic_gold.items():
-                    if not d.get('success'):
-                        continue
-                    buy = d['buy']
-                    sell = d['sell']
-                    chg = d.get('change_sell', 0)
-                    line = f"{name}  M `{_millions(buy)}` | B `{_millions(sell)}`"
-                    if chg != 0:
-                        line += f" {_icon(chg)}`{chg / 1_000_000:+.1f}`"
-                    lines.append(line)
-                parts.extend(lines)
-
-            if world_gold:
-                lines = ["", "🌐 *Vàng thế giới*"]
-                for name, d in world_gold.items():
-                    if not d.get('success'):
-                        continue
-                    p = d['price']
-                    c = d.get('change', 0)
-                    unit = d['currency']
-                    line = f"{name} `{p:,.2f}` {unit}"
-                    if c != 0:
-                        pct = (c / (p - c)) * 100 if (p - c) != 0 else 0
-                        line += f" {_icon(c)}`{pct:+.1f}%`"
-                    lines.append(line)
-                parts.extend(lines)
-        elif gold_data is None:
-            parts.append("\n🪙 ⚠️ Vàng: N/A")
-
-        # Domestic coffee
+        # 1. Domestic coffee (Top priority)
         if domestic_data:
-            parts.append("")
-            parts.append("🇻🇳 *Việt Nam* ₫/kg")
+            parts.append("\n🇻🇳 *VN* (₫/kg)")
             order = ['Đắk Lắk', 'Lâm Đồng', 'Gia Lai', 'Đắk Nông']
             locs = sorted(
                 domestic_data.keys(),
@@ -98,6 +42,7 @@ class MessageFormatter:
 
             prices: List[float] = []
             changes: List[float] = []
+            short_map = {'Đắk Lắk': 'ĐL', 'Lâm Đồng': 'LĐ', 'Gia Lai': 'GL', 'Đắk Nông': 'ĐN'}
 
             for loc in locs:
                 d = domestic_data[loc]
@@ -108,26 +53,68 @@ class MessageFormatter:
                 prices.append(p)
                 changes.append(c)
 
-                # Abbreviated province name for compactness
-                short = loc.replace('Đắk ', 'Đ.').replace('Lâm ', 'L.').replace('Gia ', 'G.').replace('Đắk ', 'Đ.')
-                line = f"{short} `{p:,.0f}`"
+                short = short_map.get(loc, loc[:2].upper())
+                line = f"{short} `{p/1000:g}k`"
                 if c != 0:
-                    pct = (c / (p - c)) * 100 if (p - c) != 0 else 0
-                    line += f" {_icon(c)}`{abs(c):,.0f}` (`{pct:+.1f}%`)"
+                    line += f" {_icon(c)}`{abs(c)/1000:g}k`"
                 parts.append(line)
 
-            # Volatility summary
             if prices:
                 avg = sum(prices) / len(prices)
                 spread = max(prices) - min(prices)
                 avg_chg = sum(changes) / len(changes) if changes else 0
-                avg_pct = (avg_chg / (avg - avg_chg)) * 100 if (avg - avg_chg) != 0 else 0
-
-                parts.append(
-                    f"📊 TB `{avg:,.0f}` {_icon(avg_chg)}`{avg_pct:+.1f}%` | "
-                    f"Chênh `{spread:,.0f}`"
-                )
+                parts.append(f"📊 TB `{avg/1000:g}k` {_icon(avg_chg)}`{abs(avg_chg)/1000:g}k` | Δ `{spread/1000:g}k`")
         elif domestic_data is None:
             parts.append("\n🇻🇳 ⚠️ N/A")
+
+        # 2. International coffee
+        if international_data:
+            parts.append("\n🌍 *TG*")
+            for name, d in international_data.items():
+                if not d.get('success'):
+                    continue
+                p = d['price']
+                c = d['change']
+                unit = d.get('currency', '')
+                short = name.split('(')[0].strip().replace('Coffee', '').strip()[:3].upper() # e.g. ROB, ARA
+                line = f"{short} `{p:,.0f}`{unit}"
+                if c != 0:
+                    line += f" {_icon(c)}`{abs(c):,.0f}`"
+                parts.append(line)
+
+        # 3. Gold
+        if gold_data:
+            domestic_gold = {k: v for k, v in gold_data.items() if v.get('currency') == 'VND'}
+            world_gold = {k: v for k, v in gold_data.items() if v.get('currency') != 'VND'}
+
+            if domestic_gold:
+                parts.append("\n🪙 *Vàng VN* (tr)")
+                for name, d in domestic_gold.items():
+                    if not d.get('success'):
+                        continue
+                    buy = d['buy']
+                    sell = d['sell']
+                    chg = d.get('change_sell', 0)
+                    short = name.replace('Vàng', '').replace('SJC', '').strip()[:5] or 'SJC'
+                    line = f"{short} M`{_millions(buy)}` B`{_millions(sell)}`"
+                    if chg != 0:
+                        line += f" {_icon(chg)}`{abs(chg)/1_000_000:g}`"
+                    parts.append(line)
+
+            if world_gold:
+                parts.append("\n🌐 *Vàng TG*")
+                for name, d in world_gold.items():
+                    if not d.get('success'):
+                        continue
+                    p = d['price']
+                    c = d.get('change', 0)
+                    unit = d['currency']
+                    short = name.split()[0][:2].upper()
+                    line = f"{short} `{p:,.0f}`{unit}"
+                    if c != 0:
+                        line += f" {_icon(c)}`{abs(c):,.0f}`"
+                    parts.append(line)
+        elif gold_data is None:
+            parts.append("\n🪙 ⚠️ N/A")
 
         return "\n".join(parts)
