@@ -100,3 +100,50 @@ class GoldPriceProvider(BaseProvider):
 
         logger.error("All %d attempts failed for vang.today", max_retries)
         return None
+
+
+class ExchangeRateProvider(BaseProvider):
+    """Fetch USD/VND rate from open.er-api.com (free, no key)."""
+
+    API_URL = "https://open.er-api.com/v6/latest/USD"
+
+    @property
+    def source_name(self) -> str:
+        return "ExchangeRate-API"
+
+    def get_prices(self) -> Dict[str, Any]:
+        """Return USD/VND mid-market rate."""
+        max_retries = Config.SCRAPER_MAX_RETRIES
+        retry_delay = Config.SCRAPER_RETRY_DELAY
+        timeout = Config.SCRAPER_TIMEOUT
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                resp = requests.get(self.API_URL, timeout=timeout)
+                resp.raise_for_status()
+                data = resp.json()
+
+                if data.get("result") == "success":
+                    vnd = data["rates"].get("VND")
+                    if vnd is not None:
+                        return {
+                            'USD/VND': {
+                                'rate': round(vnd),
+                                'success': True,
+                            }
+                        }
+
+                logger.warning("VND rate not found (attempt %d/%d)", attempt, max_retries)
+
+            except Exception as exc:
+                logger.warning(
+                    "Error fetching exchange rates (attempt %d/%d): %s",
+                    attempt, max_retries, exc,
+                )
+
+            if attempt < max_retries:
+                time.sleep(retry_delay * (2 ** (attempt - 1)))
+
+        logger.error("All %d attempts failed for exchange rates", max_retries)
+        return {}
+

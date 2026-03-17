@@ -13,7 +13,7 @@ from datetime import datetime
 
 from src.config import Config
 from src.providers.chocaphe_scraper import ChocapheScraper, ChocapheIntlScraper
-from src.providers.financial_provider import GoldPriceProvider
+from src.providers.financial_provider import GoldPriceProvider, ExchangeRateProvider
 from src.services.telegram_bot import TelegramService
 from src.services.formatter import MessageFormatter
 
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 def _fetch_all_data():
-    """Fetch data from every provider.  Returns three dicts (or None)."""
+    """Fetch data from every provider.  Returns four dicts (or None)."""
 
     logger.info("Fetching international prices…")
     try:
@@ -56,7 +56,14 @@ def _fetch_all_data():
         logger.error("Gold price provider failed: %s", exc)
         gold_data = None
 
-    return international_data, domestic_data, gold_data
+    logger.info("Fetching exchange rates…")
+    try:
+        forex_data = ExchangeRateProvider().get_prices() or None
+    except Exception as exc:
+        logger.error("Exchange rate provider failed: %s", exc)
+        forex_data = None
+
+    return international_data, domestic_data, gold_data, forex_data
 
 
 def run_update(*, send_telegram: bool = True) -> bool:
@@ -68,7 +75,7 @@ def run_update(*, send_telegram: bool = True) -> bool:
     logger.info("=" * 50)
     logger.info("Starting price update at %s", start.isoformat())
 
-    international_data, domestic_data, gold_data = _fetch_all_data()
+    international_data, domestic_data, gold_data, forex_data = _fetch_all_data()
 
     # Check that we have at least *some* data
     has_any_data = any([international_data, domestic_data, gold_data])
@@ -80,7 +87,7 @@ def run_update(*, send_telegram: bool = True) -> bool:
 
     # Format message
     message = MessageFormatter.format_full_report(
-        international_data, domestic_data, gold_data,
+        international_data, domestic_data, gold_data, forex_data,
     )
 
     # Preview
