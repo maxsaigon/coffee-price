@@ -2,7 +2,9 @@ name: Coffee Price Tracker
 
 on:
   schedule:
-    # 8AM and 3PM Vietnam time (UTC+7) -> 1AM and 8AM UTC
+    # GitHub cron is UTC. Vietnam is GMT+7:
+    # 08:00 VN -> 01:00 UTC
+    # 15:00 VN -> 08:00 UTC
     - cron: '0 1 * * *'
     - cron: '0 8 * * *'
   
@@ -40,6 +42,7 @@ jobs:
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TIMEZONE: 'Asia/Ho_Chi_Minh'
         LOG_LEVEL: 'INFO'
       run: |
         python -m src.main ${{ github.event.inputs.command || 'update' }}

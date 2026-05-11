@@ -5,7 +5,7 @@ Automated coffee bean price scraping from international and Vietnamese domestic 
 ## 🎯 Features
 
 - **International Prices**: Arabica (NYC) & Robusta (London) via **Chocaphe.vn**.
-- **Market Financials**: Gold Futures & USD/VND Exchange Rate via **Yahoo Finance**.
+- **Market Financials**: Vietnamese gold prices via **vang.today**, XAU/USD cross-check via **gold-api.com**, and USD/VND via **ExchangeRate-API**.
 - **Domestic Prices**: Real-time prices from **Chocaphe.vn** (Dak Lak, Lam Dong, Gia Lai, Dak Nong).
 - **Telegram Notifications**: Daily reports with price changes and trends.
 - **GitHub Actions**: Automated scheduling (8AM & 3PM Vietnam time).
@@ -16,7 +16,7 @@ Automated coffee bean price scraping from international and Vietnamese domestic 
 | Market | Source | Update Freq | Status |
 |--------|--------|-------------|--------|
 | **International** | Chocaphe.vn (Intl) | Real-time (Price only) | ✅ Active |
-| **Financials** | Yahoo Finance (VND=X, GC=F) | ~10 mins delayed | ✅ Active |
+| **Financials** | vang.today + gold-api.com + ExchangeRate-API | ~5-30 mins delayed | ✅ Active |
 | **Domestic** | Chocaphe.vn (Domestic) | Real-time | ✅ Active |
 
 ## 🚀 Quick Start
@@ -66,8 +66,10 @@ The project includes a pre-configured workflow `.github/workflows/coffee_tracker
    - `TELEGRAM_CHAT_ID`: Your target chat ID.
 
 ### Schedule:
-- **Morning Update**: 08:00 AM (Vietnam Time)
-- **Afternoon Update**: 15:00 PM (Vietnam Time)
+- **Morning Update**: 08:00 AM Vietnam time (`01:00 UTC`)
+- **Afternoon Update**: 15:00 Vietnam time (`08:00 UTC`)
+
+GitHub Actions cron uses UTC and may start a scheduled workflow a few minutes late during busy periods. The app formats report timestamps with `Asia/Ho_Chi_Minh` so Telegram messages show GMT+7 time.
 
 ## 📁 Project Structure
 
@@ -78,7 +80,7 @@ gianongsan/
 │   ├── config.py              # Configuration
 │   ├── providers/             # Data Fetchers
 │   │   ├── chocaphe_scraper.py# Chocaphe.vn (Intl & Domestic)
-│   │   └── financial_provider.py # Yahoo Finance (Gold/USD)
+│   │   └── financial_provider.py # Gold/USD/VND providers
 │   └── services/              # Notification Services
 ├── .github/workflows/         # Automation workflows
 ├── requirements.txt           # Dependencies
