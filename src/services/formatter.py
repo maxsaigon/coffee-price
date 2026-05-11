@@ -4,6 +4,9 @@ Compact Telegram message formatter — 2 groups: Coffee + Gold.
 
 from datetime import datetime
 from typing import Dict, Any, Optional, List
+from zoneinfo import ZoneInfo
+
+from ..config import Config
 
 
 def _icon(change: float) -> str:
@@ -19,6 +22,18 @@ def _millions(value: float) -> str:
     return f"{value / 1_000_000:,.1f}"
 
 
+def _quality_suffix(data: Dict[str, Any]) -> str:
+    flags: List[str] = []
+    if data.get('stale'):
+        flags.append("cũ")
+    if data.get('verified') is False:
+        flags.append("lệch nguồn")
+    source_time = data.get('source_time')
+    if source_time:
+        flags.append(source_time)
+    return f" ({', '.join(flags)})" if flags else ""
+
+
 class MessageFormatter:
     """Build compact Telegram messages from scraped price data."""
 
@@ -29,7 +44,7 @@ class MessageFormatter:
         gold_data: Optional[Dict[str, Any]],
         forex_data: Optional[Dict[str, Any]] = None,
     ) -> str:
-        now = datetime.now().strftime("%d/%m %H:%M")
+        now = datetime.now(ZoneInfo(Config.TIMEZONE)).strftime("%d/%m %H:%M")
         parts: List[str] = [f"☕ {now}"]
 
         # --- Coffee: international ---
@@ -94,11 +109,17 @@ class MessageFormatter:
 
         # --- Gold + Forex ---
         if gold_data or forex_data:
-            domestic_gold = {k: v for k, v in (gold_data or {}).items() if v.get('currency') == 'VND'}
-            world_gold = {k: v for k, v in (gold_data or {}).items() if v.get('currency') != 'VND'}
+            domestic_gold = {
+                k: v for k, v in (gold_data or {}).items()
+                if str(v.get('currency', '')).startswith('VND')
+            }
+            world_gold = {
+                k: v for k, v in (gold_data or {}).items()
+                if not str(v.get('currency', '')).startswith('VND')
+            }
 
             parts.append("")
-            parts.append("🪙 *Vàng*")
+            parts.append("🪙 *Vàng* (tr/lượng)")
 
             for name, d in domestic_gold.items():
                 if not d.get('success'):
@@ -109,6 +130,7 @@ class MessageFormatter:
                 line = f"{name} M`{_millions(buy)}`|B`{_millions(sell)}`"
                 if chg != 0:
                     line += f" {_icon(chg)}`{chg / 1_000_000:+.1f}`"
+                line += _quality_suffix(d)
                 parts.append(line)
 
             for name, d in world_gold.items():
@@ -122,7 +144,12 @@ class MessageFormatter:
                 line = f"{short} `{p:,.0f}` {u_short}"
                 if c != 0:
                     pct = (c / (p - c)) * 100 if (p - c) != 0 else 0
-                    line += f" {_icon(c)}`{pct:+.1f}%`"
+                    line += f" {_icon(c)}`{pct:+.2f}%`"
+                if d.get('backup_price'):
+                    diff = d.get('source_diff_percent')
+                    if diff is not None:
+                        line += f" vs `{d['backup_price']:,.0f}` ({diff:.2f}%)"
+                line += _quality_suffix(d)
                 parts.append(line)
 
             # --- USD/VND ---

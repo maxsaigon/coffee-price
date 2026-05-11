@@ -85,6 +85,8 @@ def run_update(*, send_telegram: bool = True) -> bool:
             _send_error_alert("Tất cả nguồn dữ liệu đều thất bại. Vui lòng kiểm tra hệ thống.")
         return False
 
+    _log_gold_quality(gold_data)
+
     # Format message
     message = MessageFormatter.format_full_report(
         international_data, domestic_data, gold_data, forex_data,
@@ -105,6 +107,20 @@ def run_update(*, send_telegram: bool = True) -> bool:
     elapsed = (datetime.now() - start).total_seconds()
     logger.info("Price update completed in %.1fs", elapsed)
     return True
+
+
+def _log_gold_quality(gold_data):
+    if not gold_data:
+        logger.warning("Gold provider returned no data")
+        return
+
+    stale = [name for name, item in gold_data.items() if item.get('stale')]
+    unverified = [name for name, item in gold_data.items() if item.get('verified') is False]
+
+    if stale:
+        logger.warning("Gold data is stale for: %s", ", ".join(stale))
+    if unverified:
+        logger.warning("Gold data differs from backup source for: %s", ", ".join(unverified))
 
 
 def _send_error_alert(detail: str) -> None:

@@ -102,10 +102,12 @@ name: Coffee Price Tracker
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # 8AM Vietnam (1AM UTC)
-    - cron: '0 8 * * *'  # 3PM Vietnam (8AM UTC)
+    - cron: '0 1 * * *'   # 08:00 Vietnam (01:00 UTC)
+    - cron: '0 8 * * *'   # 15:00 Vietnam (08:00 UTC)
   workflow_dispatch:
 ```
+
+GitHub Actions cron is always UTC. The workflow also sets `TIMEZONE=Asia/Ho_Chi_Minh` so message timestamps are formatted in GMT+7. GitHub can still start scheduled runs a few minutes late when their scheduler is busy.
 
 ### 4.3 Manual Test Run
 1. Go to **Actions** tab
