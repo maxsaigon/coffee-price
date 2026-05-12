@@ -27,6 +27,9 @@ class Config:
     # Exchange rate
     USD_TO_VND_RATE: float = float(os.getenv('USD_TO_VND_RATE', '25000'))
 
+    # Fuel prices
+    FUEL_REGION: int = int(os.getenv('FUEL_REGION', '2'))
+
     # Gold data quality controls
     GOLD_MAX_STALE_MINUTES: int = int(os.getenv('GOLD_MAX_STALE_MINUTES', '30'))
     GOLD_XAU_MAX_SOURCE_DIFF_PERCENT: float = float(
