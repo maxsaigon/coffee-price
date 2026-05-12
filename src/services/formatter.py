@@ -34,6 +34,40 @@ def _quality_suffix(data: Dict[str, Any]) -> str:
     return f" ({', '.join(flags)})" if flags else ""
 
 
+def _gold_brand(name: str) -> Optional[str]:
+    if name.startswith('Nhẫn'):
+        return None
+    if name.startswith('SJC'):
+        return 'SJC'
+    if name.startswith('DOJI'):
+        return 'DOJI'
+    if name.startswith('PNJ'):
+        return 'PNJ'
+    return None
+
+
+def _average_domestic_gold(domestic_gold: Dict[str, Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    items: List[Dict[str, Any]] = []
+    for name, data in domestic_gold.items():
+        if not data.get('success'):
+            continue
+        if _gold_brand(name):
+            items.append(data)
+
+    if not items:
+        return None
+
+    count = len(items)
+    return {
+        'buy': sum(item['buy'] for item in items) / count,
+        'sell': sum(item['sell'] for item in items) / count,
+        'change_sell': sum(item.get('change_sell', 0) for item in items) / count,
+        'source_time': items[0].get('source_time'),
+        'stale': any(item.get('stale') for item in items),
+        'success': True,
+    }
+
+
 class MessageFormatter:
     """Build compact Telegram messages from scraped price data."""
 
@@ -130,16 +164,15 @@ class MessageFormatter:
             parts.append("")
             parts.append("🪙 *Vàng* (tr/lượng)")
 
-            for name, d in domestic_gold.items():
-                if not d.get('success'):
-                    continue
-                buy = d['buy']
-                sell = d['sell']
-                chg = d.get('change_sell', 0)
-                line = f"{name} M`{_millions(buy)}`|B`{_millions(sell)}`"
+            avg_gold = _average_domestic_gold(domestic_gold)
+            if avg_gold:
+                buy = avg_gold['buy']
+                sell = avg_gold['sell']
+                chg = avg_gold.get('change_sell', 0)
+                line = f"VN M`{_millions(buy)}`|B`{_millions(sell)}`"
                 if chg != 0:
                     line += f" {_icon(chg)}`{chg / 1_000_000:+.1f}`"
-                line += _quality_suffix(d)
+                line += _quality_suffix(avg_gold)
                 parts.append(line)
 
             for name, d in world_gold.items():
