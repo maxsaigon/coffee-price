@@ -38,13 +38,22 @@ class MessageFormatter:
     """Build compact Telegram messages from scraped price data."""
 
     @staticmethod
+    def _report_time(gold_data: Optional[Dict[str, Any]]) -> str:
+        if gold_data:
+            for item in gold_data.values():
+                if item.get('success') and item.get('source_time'):
+                    return item['source_time']
+
+        return datetime.now(ZoneInfo(Config.TIMEZONE)).strftime("%d/%m %H:%M")
+
+    @staticmethod
     def format_full_report(
         international_data: Optional[Dict[str, Any]],
         domestic_data: Optional[Dict[str, Any]],
         gold_data: Optional[Dict[str, Any]],
         forex_data: Optional[Dict[str, Any]] = None,
     ) -> str:
-        now = datetime.now(ZoneInfo(Config.TIMEZONE)).strftime("%d/%m %H:%M")
+        now = MessageFormatter._report_time(gold_data)
         parts: List[str] = [f"☕ {now}"]
 
         # --- Coffee: international ---

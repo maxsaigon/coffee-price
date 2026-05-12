@@ -2,11 +2,12 @@ name: Coffee Price Tracker
 
 on:
   schedule:
-    # GitHub cron is UTC. Vietnam is GMT+7:
-    # 08:00 VN -> 01:00 UTC
-    # 15:00 VN -> 08:00 UTC
-    - cron: '0 1 * * *'
-    - cron: '0 8 * * *'
+    # GitHub cron is UTC. Vietnam is GMT+7.
+    # Avoid :00/:30 because scheduled workflows are often queued there.
+    # 11:35 VN -> 04:35 UTC, shortly after vang.today's 11:30 update.
+    # 18:05 VN -> 11:05 UTC, shortly after vang.today's 18:00 update.
+    - cron: '35 4 * * *'
+    - cron: '5 11 * * *'
   
   workflow_dispatch:
     inputs:

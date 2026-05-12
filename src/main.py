@@ -10,6 +10,7 @@ import sys
 import argparse
 import logging
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from src.config import Config
 from src.providers.chocaphe_scraper import ChocapheScraper, ChocapheIntlScraper
@@ -71,7 +72,7 @@ def run_update(*, send_telegram: bool = True) -> bool:
 
     Returns True if data was scraped (and optionally sent) successfully.
     """
-    start = datetime.now()
+    start = datetime.now(ZoneInfo(Config.TIMEZONE))
     logger.info("=" * 50)
     logger.info("Starting price update at %s", start.isoformat())
 
@@ -104,7 +105,7 @@ def run_update(*, send_telegram: bool = True) -> bool:
             logger.error("Failed to send Telegram message")
             return False
 
-    elapsed = (datetime.now() - start).total_seconds()
+    elapsed = (datetime.now(ZoneInfo(Config.TIMEZONE)) - start).total_seconds()
     logger.info("Price update completed in %.1fs", elapsed)
     return True
 
@@ -126,7 +127,7 @@ def _log_gold_quality(gold_data):
 def _send_error_alert(detail: str) -> None:
     """Best-effort error notification via Telegram."""
     try:
-        now = datetime.now().strftime("%d/%m/%Y %H:%M")
+        now = datetime.now(ZoneInfo(Config.TIMEZONE)).strftime("%d/%m/%Y %H:%M")
         alert = (
             f"🚨 *LỖI HỆ THỐNG*\n"
             f"📅 {now}\n\n"

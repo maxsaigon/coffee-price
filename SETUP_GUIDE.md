@@ -102,12 +102,12 @@ name: Coffee Price Tracker
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # 08:00 Vietnam (01:00 UTC)
-    - cron: '0 8 * * *'   # 15:00 Vietnam (08:00 UTC)
+    - cron: '35 4 * * *'  # 11:35 Vietnam (04:35 UTC)
+    - cron: '5 11 * * *'  # 18:05 Vietnam (11:05 UTC)
   workflow_dispatch:
 ```
 
-GitHub Actions cron is always UTC. The workflow also sets `TIMEZONE=Asia/Ho_Chi_Minh` so message timestamps are formatted in GMT+7. GitHub can still start scheduled runs a few minutes late when their scheduler is busy.
+GitHub Actions cron is always UTC. The workflow also sets `TIMEZONE=Asia/Ho_Chi_Minh` so fallback message timestamps are formatted in GMT+7. The report header uses the data source time when available, and the workflow avoids crowded `:00`/`:30` cron minutes to reduce queue delays.
 
 ### 4.3 Manual Test Run
 1. Go to **Actions** tab
@@ -175,8 +175,8 @@ Bot should send message like:
 ```
 
 ### 6.3 Schedule Verification
-- 8:00 AM Vietnam time (1:00 AM UTC)
-- 3:00 PM Vietnam time (8:00 AM UTC)
+- 11:35 AM Vietnam time (4:35 AM UTC)
+- 6:05 PM Vietnam time (11:05 AM UTC)
 
 ## 🛠️ Step 7: Customization
 
@@ -248,7 +248,7 @@ If you encounter issues:
 - [ ] GitHub Actions enabled
 - [ ] Manual test run successful
 - [ ] Bot sends messages to correct chat
-- [ ] Schedule verified (8AM & 3PM Vietnam time)
+- [ ] Schedule verified (11:35AM & 6:05PM Vietnam time)
 - [ ] Error handling working (bot notifies on failures)
 
 ## 🎉 Success!
