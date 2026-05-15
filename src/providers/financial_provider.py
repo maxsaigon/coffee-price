@@ -1,10 +1,12 @@
 import logging
+import re
 import time
 from datetime import datetime
 from typing import Dict, Any, Optional
 from zoneinfo import ZoneInfo
 
 import requests
+from bs4 import BeautifulSoup
 
 from .base import BaseProvider
 from ..config import Config
@@ -26,6 +28,8 @@ DOMESTIC_GOLD_MAX = 300_000_000
 DOMESTIC_SPREAD_MAX = 20_000_000
 XAU_MIN = 1_000
 XAU_MAX = 10_000
+FUEL_MIN = 10_000
+FUEL_MAX = 60_000
 
 
 class GoldPriceProvider(BaseProvider):
@@ -278,3 +282,116 @@ class ExchangeRateProvider(BaseProvider):
 
         logger.error("All %d attempts failed for exchange rates", max_retries)
         return {}
+
+
+class FuelPriceProvider(BaseProvider):
+    """Fetch domestic Petrolimex fuel prices from Webgia."""
+
+    URL = "https://webgia.com/gia-xang-dau/petrolimex/"
+    PRODUCTS = {
+        "Xăng RON 95-III": "R95",
+        "Xăng E5 RON 92-II": "E5",
+        "DO 0,05S-II": "DO",
+    }
+
+    @property
+    def source_name(self) -> str:
+        return "webgia.com/Petrolimex"
+
+    def get_prices(self) -> Dict[str, Any]:
+        raw = self._fetch_page()
+        if raw is None:
+            return {}
+
+        return self._parse_page(raw, Config.FUEL_REGION)
+
+    def _fetch_page(self) -> Optional[str]:
+        for attempt in range(1, Config.SCRAPER_MAX_RETRIES + 1):
+            try:
+                resp = requests.get(
+                    self.URL,
+                    timeout=Config.SCRAPER_TIMEOUT,
+                    headers={
+                        'User-Agent': (
+                            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+                            'AppleWebKit/537.36 (KHTML, like Gecko) '
+                            'Chrome/120.0.0.0 Safari/537.36'
+                        )
+                    },
+                )
+                resp.raise_for_status()
+                resp.encoding = 'utf-8'
+                return resp.text
+            except Exception as exc:
+                logger.warning(
+                    "Error fetching fuel prices (attempt %d/%d): %s",
+                    attempt, Config.SCRAPER_MAX_RETRIES, exc,
+                )
+                if attempt < Config.SCRAPER_MAX_RETRIES:
+                    time.sleep(Config.SCRAPER_RETRY_DELAY * (2 ** (attempt - 1)))
+
+        logger.error("All %d attempts failed for fuel prices", Config.SCRAPER_MAX_RETRIES)
+        return None
+
+    def _parse_page(self, html: str, region: int) -> Dict[str, Any]:
+        if region not in (1, 2):
+            logger.warning("Unsupported fuel region %s, falling back to region 2", region)
+            region = 2
+
+        soup = BeautifulSoup(html, 'html.parser')
+        table = soup.find('table')
+        if table is None:
+            logger.warning("Fuel price table not found")
+            return {}
+
+        source_time = self._extract_source_time(soup)
+        results: Dict[str, Any] = {}
+        price_col = region
+
+        for row in table.find_all('tr'):
+            cells = [cell.get_text(" ", strip=True) for cell in row.find_all(['td', 'th'])]
+            if len(cells) < 3:
+                continue
+
+            product = cells[0]
+            short = self.PRODUCTS.get(product)
+            if short is None:
+                continue
+
+            price = self._parse_price(cells[price_col])
+            if price is None:
+                continue
+
+            results[short] = {
+                'price': price,
+                'currency': 'VND/lít',
+                'region': region,
+                'source': self.source_name,
+                'source_time': source_time,
+                'success': True,
+            }
+
+        return results
+
+    @staticmethod
+    def _parse_price(value: str) -> Optional[int]:
+        try:
+            price = int(value.replace('.', '').replace(',', '').strip())
+        except ValueError:
+            logger.warning("Invalid fuel price: %s", value)
+            return None
+
+        if not (FUEL_MIN <= price <= FUEL_MAX):
+            logger.warning("Fuel price out of range: %s", price)
+            return None
+        return price
+
+    @staticmethod
+    def _extract_source_time(soup: BeautifulSoup) -> Optional[str]:
+        text = soup.get_text(" ", strip=True)
+        match = re.search(r"Cập nhật lúc\s+(\d{2}:\d{2}:\d{2})\s+(\d{2})/(\d{2})/(\d{4})", text)
+        if not match:
+            return None
+
+        time_text, day, month, _year = match.groups()
+        return f"{day}/{month} {time_text[:5]}"

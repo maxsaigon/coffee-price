@@ -14,7 +14,11 @@ from zoneinfo import ZoneInfo
 
 from src.config import Config
 from src.providers.chocaphe_scraper import ChocapheScraper, ChocapheIntlScraper
-from src.providers.financial_provider import GoldPriceProvider, ExchangeRateProvider
+from src.providers.financial_provider import (
+    GoldPriceProvider,
+    ExchangeRateProvider,
+    FuelPriceProvider,
+)
 from src.services.telegram_bot import TelegramService
 from src.services.formatter import MessageFormatter
 
@@ -34,7 +38,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 def _fetch_all_data():
-    """Fetch data from every provider.  Returns four dicts (or None)."""
+    """Fetch data from every provider."""
 
     logger.info("Fetching international prices…")
     try:
@@ -64,7 +68,14 @@ def _fetch_all_data():
         logger.error("Exchange rate provider failed: %s", exc)
         forex_data = None
 
-    return international_data, domestic_data, gold_data, forex_data
+    logger.info("Fetching fuel prices…")
+    try:
+        fuel_data = FuelPriceProvider().get_prices() or None
+    except Exception as exc:
+        logger.error("Fuel price provider failed: %s", exc)
+        fuel_data = None
+
+    return international_data, domestic_data, gold_data, forex_data, fuel_data
 
 
 def run_update(*, send_telegram: bool = True) -> bool:
@@ -76,7 +87,7 @@ def run_update(*, send_telegram: bool = True) -> bool:
     logger.info("=" * 50)
     logger.info("Starting price update at %s", start.isoformat())
 
-    international_data, domestic_data, gold_data, forex_data = _fetch_all_data()
+    international_data, domestic_data, gold_data, forex_data, fuel_data = _fetch_all_data()
 
     # Check that we have at least *some* data
     has_any_data = any([international_data, domestic_data, gold_data])
@@ -90,7 +101,7 @@ def run_update(*, send_telegram: bool = True) -> bool:
 
     # Format message
     message = MessageFormatter.format_full_report(
-        international_data, domestic_data, gold_data, forex_data,
+        international_data, domestic_data, gold_data, forex_data, fuel_data,
     )
 
     # Preview

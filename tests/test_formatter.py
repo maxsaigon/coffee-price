@@ -5,7 +5,7 @@ from src.services.formatter import MessageFormatter
 
 
 class MessageFormatterTest(unittest.TestCase):
-    def test_report_header_prefers_gold_source_time(self):
+    def test_report_header_uses_runtime_not_source_time(self):
         gold_data = {
             "SJC 1L/10L": {
                 "buy": 162_200_000,
@@ -17,14 +17,19 @@ class MessageFormatterTest(unittest.TestCase):
             }
         }
 
-        message = MessageFormatter.format_full_report(
-            international_data=None,
-            domestic_data=None,
-            gold_data=gold_data,
-            forex_data=None,
-        )
+        with patch("src.services.formatter.datetime") as mock_datetime:
+            mock_datetime.now.return_value.strftime.return_value = "11/05 18:22"
 
-        self.assertTrue(message.startswith("☕ 11/05 18:00"))
+            message = MessageFormatter.format_full_report(
+                international_data=None,
+                domestic_data=None,
+                gold_data=gold_data,
+                forex_data=None,
+            )
+
+        self.assertTrue(message.startswith("☕ 11/05 18:22"))
+        self.assertIn("VN M`162.2`|B`165.2`", message)
+        self.assertIn("(11/05 18:00)", message)
 
     def test_report_header_falls_back_to_runtime_when_no_source_time(self):
         with patch("src.services.formatter.datetime") as mock_datetime:
@@ -95,6 +100,38 @@ class MessageFormatterTest(unittest.TestCase):
         self.assertNotIn("DOJI M", message)
         self.assertNotIn("PNJ M", message)
         self.assertNotIn("Nhẫn", message)
+
+    def test_fuel_prices_are_formatted_in_one_line(self):
+        fuel_data = {
+            "R95": {
+                "price": 24_830,
+                "region": 2,
+                "source_time": "14/05 14:13",
+                "success": True,
+            },
+            "E5": {
+                "price": 24_260,
+                "region": 2,
+                "source_time": "14/05 14:13",
+                "success": True,
+            },
+            "DO": {
+                "price": 28_030,
+                "region": 2,
+                "source_time": "14/05 14:13",
+                "success": True,
+            },
+        }
+
+        message = MessageFormatter.format_full_report(
+            international_data=None,
+            domestic_data=None,
+            gold_data=None,
+            forex_data=None,
+            fuel_data=fuel_data,
+        )
+
+        self.assertIn("⛽ R95 `24.83` E5 `24.26` DO `28.03`k/L (V2, 14/05 14:13)", message)
 
 
 if __name__ == "__main__":

@@ -44,6 +44,7 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TIMEZONE: 'Asia/Ho_Chi_Minh'
+        FUEL_REGION: '2'
         LOG_LEVEL: 'INFO'
       run: |
         python -m src.main ${{ github.event.inputs.command || 'update' }}

@@ -72,12 +72,7 @@ class MessageFormatter:
     """Build compact Telegram messages from scraped price data."""
 
     @staticmethod
-    def _report_time(gold_data: Optional[Dict[str, Any]]) -> str:
-        if gold_data:
-            for item in gold_data.values():
-                if item.get('success') and item.get('source_time'):
-                    return item['source_time']
-
+    def _report_time() -> str:
         return datetime.now(ZoneInfo(Config.TIMEZONE)).strftime("%d/%m %H:%M")
 
     @staticmethod
@@ -86,8 +81,9 @@ class MessageFormatter:
         domestic_data: Optional[Dict[str, Any]],
         gold_data: Optional[Dict[str, Any]],
         forex_data: Optional[Dict[str, Any]] = None,
+        fuel_data: Optional[Dict[str, Any]] = None,
     ) -> str:
-        now = MessageFormatter._report_time(gold_data)
+        now = MessageFormatter._report_time()
         parts: List[str] = [f"☕ {now}"]
 
         # --- Coffee: international ---
@@ -150,8 +146,8 @@ class MessageFormatter:
         elif domestic_data is None and international_data is None:
             parts.append("⚠️ Cafe: N/A")
 
-        # --- Gold + Forex ---
-        if gold_data or forex_data:
+        # --- Gold + Forex + Fuel ---
+        if gold_data or forex_data or fuel_data:
             domestic_gold = {
                 k: v for k, v in (gold_data or {}).items()
                 if str(v.get('currency', '')).startswith('VND')
@@ -201,7 +197,38 @@ class MessageFormatter:
                     parts.append(
                         f"💵 USD `{usd['rate']:,}` ₫"
                     )
+            if fuel_data:
+                fuel_line = MessageFormatter._format_fuel_line(fuel_data)
+                if fuel_line:
+                    parts.append(fuel_line)
         elif gold_data is None:
             parts.append("\n🪙 ⚠️ Vàng: N/A")
 
         return "\n".join(parts)
+
+    @staticmethod
+    def _format_fuel_line(fuel_data: Dict[str, Any]) -> Optional[str]:
+        order = ['R95', 'E5', 'DO']
+        values: List[str] = []
+        region = None
+        source_time = None
+
+        for code in order:
+            item = fuel_data.get(code)
+            if not item or not item.get('success'):
+                continue
+            values.append(f"{code} `{item['price'] / 1000:.2f}`")
+            region = item.get('region', region)
+            source_time = item.get('source_time', source_time)
+
+        if not values:
+            return None
+
+        suffix_parts: List[str] = []
+        if region:
+            suffix_parts.append(f"V{region}")
+        if source_time:
+            suffix_parts.append(source_time)
+
+        suffix = f" ({', '.join(suffix_parts)})" if suffix_parts else ""
+        return f"⛽ {' '.join(values)}k/L{suffix}"
