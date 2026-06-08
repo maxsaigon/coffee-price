@@ -102,8 +102,8 @@ name: Coffee Price Tracker
 
 on:
   schedule:
-    - cron: '35 4 * * *'  # 11:35 Vietnam (04:35 UTC)
-    - cron: '5 11 * * *'  # 18:05 Vietnam (11:05 UTC)
+    - cron: '10 1 * * *'  # 8:10 Vietnam (01:10 UTC)
+    - cron: '10 8 * * *'  # 15:10 Vietnam (08:10 UTC)
   workflow_dispatch:
 ```
 
@@ -175,8 +175,8 @@ Bot should send message like:
 ```
 
 ### 6.3 Schedule Verification
-- 11:35 AM Vietnam time (4:35 AM UTC)
-- 6:05 PM Vietnam time (11:05 AM UTC)
+- 8:10 AM Vietnam time (1:10 AM UTC)
+- 3:10 PM Vietnam time (8:10 AM UTC)
 
 ## 🛠️ Step 7: Customization
 
@@ -248,7 +248,7 @@ If you encounter issues:
 - [ ] GitHub Actions enabled
 - [ ] Manual test run successful
 - [ ] Bot sends messages to correct chat
-- [ ] Schedule verified (11:35AM & 6:05PM Vietnam time)
+- [ ] Schedule verified (8:10AM & 3:10PM Vietnam time)
 - [ ] Error handling working (bot notifies on failures)
 
 ## 🎉 Success!

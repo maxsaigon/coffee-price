@@ -66,8 +66,8 @@ The project includes a pre-configured workflow `.github/workflows/coffee_tracker
    - `TELEGRAM_CHAT_ID`: Your target chat ID.
 
 ### Schedule:
-- **Midday Update**: 11:35 Vietnam time (`04:35 UTC`)
-- **Evening Update**: 18:05 Vietnam time (`11:05 UTC`)
+- **Morning Update**: 08:10 Vietnam time (`01:10 UTC`)
+- **Afternoon Update**: 15:10 Vietnam time (`08:10 UTC`)
 
 GitHub Actions cron uses UTC and may start a scheduled workflow late during busy periods, especially at `:00` and `:30`. The workflow avoids those crowded minutes, and the app formats report timestamps from the data source time when available, falling back to `Asia/Ho_Chi_Minh` runtime.
 
