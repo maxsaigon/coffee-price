@@ -142,7 +142,7 @@ class ChocapheScraper(BaseProvider):
         price = 0.0
         change = 0.0
 
-        # Strategy 1: H1 tag
+        # Strategy 1: H1 tag (primary source of body content)
         h1 = soup.find('h1')
         if h1:
             text = h1.get_text()
@@ -150,20 +150,28 @@ class ChocapheScraper(BaseProvider):
             if price_match:
                 price = _parse_vn_number(price_match.group(1))
 
-            change_match = re.search(r'(tăng|giảm)\s+(\d+(?:\.\d+)*)', text.lower())
+            # Support optional modifier words like "tăng nhẹ", "giảm mạnh"
+            change_match = re.search(r'(tăng|giảm)\s+\D*?(\d+(?:\.\d+)*)', text.lower())
             if change_match:
                 direction, amount_str = change_match.groups()
                 amount = _parse_vn_number(amount_str)
                 change = -amount if direction == 'giảm' else amount
 
-        # Strategy 2: Meta description fallback
+        # Strategy 2: Body text fallback (searching paragraphs in case H1 changes layout)
+        # Avoid relying on cached/delayed meta tags which sometimes render as "0 VNĐ/kg"
         if price == 0:
-            meta = soup.find('meta', {'name': 'description'})
-            if meta:
-                text = meta.get('content', '')
+            for p in soup.find_all('p'):
+                text = p.get_text()
                 price_match = re.search(r'(\d+(?:\.\d+)+)\s*VNĐ/kg', text)
                 if price_match:
                     price = _parse_vn_number(price_match.group(1))
+                    
+                    change_match = re.search(r'(tăng|giảm)\s+\D*?(\d+(?:\.\d+)*)', text.lower())
+                    if change_match:
+                        direction, amount_str = change_match.groups()
+                        amount = _parse_vn_number(amount_str)
+                        change = -amount if direction == 'giảm' else amount
+                    break
 
         if price > 0:
             return {
@@ -207,15 +215,11 @@ class ChocapheIntlScraper(BaseProvider):
         try:
             soup = BeautifulSoup(response.text, 'html.parser')
 
-            # Combine title + meta description for searching
-            text_sources = []
+            # Parse ONLY from the page title. Avoid the meta description tag which
+            # suffers from database render/copy-paste bugs (e.g. duplicating Robusta price for Arabica).
+            full_text = ""
             if soup.title:
-                text_sources.append(soup.title.get_text())
-            meta = soup.find('meta', {'name': 'description'})
-            if meta:
-                text_sources.append(meta.get('content', ''))
-
-            full_text = " ".join(text_sources).lower()
+                full_text = soup.title.get_text().lower()
 
             # --- Robusta ---
             robusta_match = re.search(

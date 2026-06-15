@@ -339,7 +339,18 @@ class FuelPriceProvider(BaseProvider):
             region = 2
 
         soup = BeautifulSoup(html, 'html.parser')
-        table = soup.find('table')
+        
+        # Locate the table containing Petrolimex products (safe from header/ad tables)
+        table = None
+        for t in soup.find_all('table'):
+            t_text = t.get_text()
+            if "RON 95" in t_text or "Sản phẩm" in t_text:
+                table = t
+                break
+        
+        if table is None:
+            table = soup.find('table')
+
         if table is None:
             logger.warning("Fuel price table not found")
             return {}
